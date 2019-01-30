@@ -53,26 +53,28 @@ const styles = StyleSheet.create({
     width: scaleSize(150),
     height: scaleSize(200),
     alignItems: "center",
-    backgroundColor: "#eee",
+    backgroundColor: "rgba(0,0,0,0.1)",
     marginBottom: scaleSize(20),
-    borderColor: "#333",
-    borderWidth: 1
+    paddingVertical: scaleSize(5)
+    // borderColor: "#333",
+    // borderWidth: 1
   },
   titleWrapper: {
-    flexDirection: "row"
+    flexDirection: "row",
+    alignItems: "center"
   },
   line: {
     width: scaleSize(10),
     height: 1,
-    marginTop: scaleSize(19),
+    // marginTop: scaleSize(19),
     backgroundColor: "#333"
   },
   title: {
     textAlign: "center",
     color: "#222",
     fontSize: setSpText2(8),
-    margin: scaleSize(8),
-    marginTop: scaleSize(10)
+    marginHorizontal: scaleSize(8)
+    // marginTop: scaleSize(10)
   },
   desc: {
     textAlign: "center",

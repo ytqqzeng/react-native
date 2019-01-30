@@ -399,7 +399,7 @@ class GoodsDetail extends Component {
             alignItems: "center",
             borderRadius: scaleSize(20),
             position: "absolute",
-            bottom: 50,
+            bottom: 70,
             left: 6,
             width: scaleSize(40),
             height: scaleSize(40)

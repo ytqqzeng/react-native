@@ -166,7 +166,7 @@ class MyPage extends Component {
           >
             <Text style={{ textAlign: "center" }}>已收藏商品</Text>
             <View style={styles.BuyerAvatar}>
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", paddingLeft: scaleSize(7) }}>
                 {imagesFavorite.map(item => {
                   return (
                     <Image
