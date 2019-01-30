@@ -94,7 +94,7 @@ class Login extends Component {
               }}
               value={this.state.username}
               //   underlineColorAndroid={"transparent"}
-              //   placeholderTextColor={"#CCCCCC"}
+              placeholderTextColor={"#CCCCCC"}
             />
           </View>
           <View style={styles.view1}>
@@ -126,13 +126,14 @@ class Login extends Component {
               paddingVertical: scaleSize(10),
               backgroundColor: "#FC6969",
               color: "#fff",
-              fontSize: setSpText2(14)
+              fontSize: setSpText2(14),
+              borderRadius: scaleSize(3)
             }}
             onPress={() => {
               this.login();
             }}
           >
-            登 陆
+            登 录
           </Text>
           <View
             style={{

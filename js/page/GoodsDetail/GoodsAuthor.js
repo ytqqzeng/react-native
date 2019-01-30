@@ -17,7 +17,6 @@ import {
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import Avartar from "../../common/avatar";
-import EndLine from "../../common/EndLine";
 
 /**
  * 商品推荐人的板块信息
@@ -266,9 +265,7 @@ export default class GoodsAuthor extends Component {
         <Text style={{ fontSize: 17, color: "#666", textAlign: "center" }}>
           {authorDescrip}
         </Text>
-        <View style={{ marginTop: 10, marginBottom: 10 }}>
-          <EndLine title={null} />
-        </View>
+        <View style={{ marginTop: 10, marginBottom: 10 }} />
         {/* {this._follow(follow)} */}
         {this._recommend(avatarName)}
         {this._recommendDetail(recommend)}

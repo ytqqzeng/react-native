@@ -11,7 +11,7 @@ export default class Fetch {
         return responseJson;
       })
       .catch(error => {
-        console.warn(`error:${error}`);
+        console.warn(`搜索error:${error}`);
       });
   }
   static fetchPost(api, param) {

@@ -51,7 +51,7 @@ export default class StatusBar extends Component {
   // 一元查看
   checked = is_viewed_price => {
     return (
-      <View style={{}}>
+      <View>
         <Text style={styles.price}>
           {is_viewed_price ? "当前价" : "查看价格"}
         </Text>
@@ -109,7 +109,8 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   viewNum: {
-    width: scaleSize(70),
+    // width: scaleSize(70),
+    flex: 1,
     height: scaleHeight(55),
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     marginLeft: scaleSize(10)
   },
   endTime: {
-    width: scaleSize(120),
+    width: scaleSize(150),
     height: scaleHeight(55),
     justifyContent: "space-around",
     alignItems: "center",
@@ -154,11 +155,10 @@ const styles = StyleSheet.create({
   },
   salePrice: {
     width: scaleSize(35),
-    height: scaleHeight(25),
     textAlign: "center",
     color: "#fff",
-    paddingTop: scaleSize(3),
-    borderRadius: 7,
-    backgroundColor: "#E4007F"
+    paddingVertical: scaleSize(7),
+    borderRadius: scaleSize(2),
+    backgroundColor: "#FC6969"
   }
 });

@@ -8,7 +8,7 @@
 
 import React, { Component } from "react";
 import { Platform, StyleSheet, Image, Text, View } from "react-native";
-import EndLine from "../common/EndLine";
+
 /**
  * 购买须知
  */
@@ -57,9 +57,7 @@ export default class ShoppingExplanation extends Component {
             7个工作日自收到商品7天之内可以申请退换货自收到商品7天之内可以申请退换货自收到商品7天之内可以申请退换货自收到商品7天之内可以申请退换货自收到商品7天之内可以申请退换货自收到商品7天之内可以申请退换货
           </Text>
         </View>
-        <View style={styles.end}>
-          <EndLine title={"the end .."} />
-        </View>
+        <View style={styles.end} />
       </View>
     );
   }

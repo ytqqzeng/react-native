@@ -147,8 +147,7 @@ class GoodsDetail extends Component {
     const { params } = this.props.navigation.state;
     const goodIndex = params ? params.goodIndex : null;
     const type = params ? params.type : null;
-    console.warn("member_id::", member_id);
-    console.warn("this.props.userInfo::", this.props.userInfo);
+
     StorageUtil.getGoods(type)
       .then(res => {
         this.setState({
@@ -157,7 +156,7 @@ class GoodsDetail extends Component {
       })
       .catch(err => console.warn("err::", err));
     // 详情页商品推荐
-    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           recommend: res.data
@@ -254,7 +253,7 @@ class GoodsDetail extends Component {
                 style={{
                   paddingVertical: scaleSize(10),
                   color: "#333",
-                  fontSize: setSpText2(10)
+                  fontSize: setSpText2(13)
                 }}
               >
                 {goodDetail.name}
@@ -262,8 +261,21 @@ class GoodsDetail extends Component {
               <View
                 style={{ flexDirection: "row", marginVertical: scaleSize(3) }}
               >
-                <Label title={"正品保证"} style={{ marginRight: 10 }} />
-                <Label title={"现货"} />
+                <Label
+                  title={"正品"}
+                  style={{
+                    marginRight: 10,
+                    borderRadius: scaleSize(3),
+                    fontSize: setSpText2(8)
+                  }}
+                />
+                <Label
+                  title={"现货"}
+                  style={{
+                    borderRadius: scaleSize(3),
+                    fontSize: setSpText2(8)
+                  }}
+                />
               </View>
             </View>
             <View>
@@ -346,14 +358,13 @@ class GoodsDetail extends Component {
     // 导航条背景色变化
     const barBackColor = scrollY.interpolate({
       inputRange: [0, HEADER_SCROLL_DISTANCE],
-      outputRange: ["rgba(0,0,0,0)", "rgba(0,0,0,0.8)"],
+      outputRange: ["rgba(255,255,255,0)", "rgba(255,255,255,1)"],
       extrapolate: "clamp"
     });
     const { params } = this.props.navigation.state;
     const title = params ? params.title : null;
     const navigation = this.props.navigation;
     const { goodDetail, payment } = this.state;
-    console.warn("goodDetail222::", goodDetail);
 
     return (
       <View style={styles.container}>
@@ -368,8 +379,11 @@ class GoodsDetail extends Component {
             right: 0,
             zIndex: 100
           }}
-          leftButton={ViewUtils.getLeftButton(() => {
+          leftButton={ViewUtils.getLeftButtonForGoodsDetail(() => {
             navigation.goBack();
+          })}
+          rightButton={ViewUtils.getRightButtonForGoodsDetail(() => {
+            console.warn("222::", 222);
           })}
         />
 
@@ -380,13 +394,13 @@ class GoodsDetail extends Component {
         )}
         <View
           style={{
-            backgroundColor: "rgba(0,0,0,0.4)",
+            backgroundColor: "rgba(255,255,255,0.6)",
             justifyContent: "center",
             alignItems: "center",
             borderRadius: scaleSize(20),
             position: "absolute",
-            bottom: scaleSize(50),
-            left: scaleSize(6),
+            bottom: 50,
+            left: 6,
             width: scaleSize(40),
             height: scaleSize(40)
           }}

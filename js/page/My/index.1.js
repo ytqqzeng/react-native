@@ -61,7 +61,7 @@ class MyPage extends Component {
   _renderHead = () => {
     const { navigation } = this.props;
     const { face, nickname } = this.props.userInfo;
-
+ 
     return (
       <View
         style={{
@@ -125,15 +125,10 @@ class MyPage extends Component {
                 title: "已查看价格"
               });
             }}
-            style={[styles.Buyer]}
+            style={styles.Buyer}
           >
-            <Text style={{ textAlign: "center" }}>已查看价格</Text>
-            <View
-              style={[
-                styles.BuyerAvatar,
-                { borderRightWidth: 1, borderColor: "#ddd" }
-              ]}
-            >
+            <Text>已查看价格</Text>
+            <View style={styles.BuyerAvatar}>
               <View style={{ flexDirection: "row" }}>
                 {images.map(item => {
                   return (
@@ -164,7 +159,7 @@ class MyPage extends Component {
             }}
             style={styles.Buyer}
           >
-            <Text style={{ textAlign: "center" }}>已收藏商品</Text>
+            <Text>已收藏商品</Text>
             <View style={styles.BuyerAvatar}>
               <View style={{ flexDirection: "row" }}>
                 {imagesFavorite.map(item => {
@@ -419,7 +414,7 @@ const styles = StyleSheet.create({
   }, //我的买手 我的喜欢
   Buyer: {
     flex: 1,
-    // borderRightWidth: 1,
+    borderRightWidth: 1,
     borderColor: "#eee",
     justifyContent: "space-between"
   },

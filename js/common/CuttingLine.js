@@ -6,69 +6,42 @@
  * @flow
  */
 
-import React, { Component } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
-import { scaleSize, scaleHeight, setSpText2, } from '../util/screenUtil'
-export default class CuttingLine extends Component {
-    render() {
-        // 通过参数来标记使用哪一种分割线
-            return (
-                <View style={styles.container}>
-                     <Text style={styles.content}>{this.props.title}</Text>
-                     <View style={styles.line}>
-                        <View style={[styles.dolt,styles.leftdolt]}></View>
-                        <View style={[styles.dolt,styles.middolt]}></View>
-                        <View style={[styles.dolt,styles.righttdolt]}></View>
-                     </View>
-                </View>
-            );
-    }
-}
-// 第二种样式的分割线 
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { scaleSize, scaleHeight, setSpText2 } from "../util/screenUtil";
+export default (CuttingLine = ({ title, subtitle, style }) => {
+  return (
+    <View style={[styles.container, style]}>
+      <View style={{ flexDirection: "row", marginBottom: scaleSize(10) }}>
+        <View style={{ width: scaleSize(5), backgroundColor: "#FC6969" }} />
+        <Text
+          style={{
+            fontSize: setSpText2(12),
+            marginLeft: scaleSize(8),
+            fontWeight: "bold",
+            color: "#333",
+            letterSpacing: 1
+          }}
+        >
+          {title}
+        </Text>
+      </View>
+      <Text
+        style={{
+          fontSize: setSpText2(12),
+          letterSpacing: 1,
+          color: "#999"
+        }}
+      >
+        {subtitle}
+      </Text>
+    </View>
+  );
+});
+// 第二种样式的分割线
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        left:scaleSize(-20)
-         
-    },
-    content: {
-        width:scaleSize(200),
-        height:scaleHeight(24),
-        lineHeight:scaleHeight(20),
-        textAlign:'left',
-        color:'#fff',
-        fontSize:setSpText2(12),
-        backgroundColor: '#000',
-        paddingLeft:scaleSize(30),
-    },
-    line: {
-        // flex:1,
-        width:scaleSize(260),
-        height:2,
-        backgroundColor: '#333',
-        zIndex:100
-    },
-    dolt:{
-        position:'absolute',
-        top:-5,
-        width:scaleSize(6),
-        height:scaleSize(6),
-        borderRadius:scaleSize(3),
-        backgroundColor:'#333'
-    },
-    leftdolt:{
-        left:30
-    },
-    middolt:{
-        left:60
-    },
-    righttdolt:{
-        left:90
-    },
+  container: {
+    flex: 1,
+    padding: scaleSize(15)
+  }
 });

@@ -16,7 +16,7 @@ import {
   Text,
   View
 } from "react-native";
-import { scaleSize, scaleHeight, setSpText2 } from "../util/screenUtil";
+import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import Swiper from "react-native-swiper";
 const WindowWidth = Dimensions.get("window").width;
 
@@ -43,12 +43,6 @@ export default class Swipper extends Component {
         }}
       >
         <View style={styles.slide375} key={key}>
-          {isShowText ? (
-            <Text style={styles.text}>
-              {data.name.substring(0, 20) + "...."}
-            </Text>
-          ) : null}
-
           <Image
             style={styles.img}
             source={{ uri: Imageurl }}
@@ -64,12 +58,12 @@ export default class Swipper extends Component {
       <View
         style={styles.container}
         style={{
-          height: 375
+          height: 300
         }}
       >
         <Swiper
           style={styles.wrapper}
-          style={{ height: 375 }}
+          style={{ height: 300 }}
           showsButtons={false}
         >
           {data.map((item, i) => {
@@ -87,14 +81,14 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: "row",
-    height: 375
+    height: 300
   },
   slide375: {
     flexDirection: "row",
-    height: 375,
+    height: 300,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#333"
+    alignItems: "center"
+    // backgroundColor: "#333"
   },
 
   text: {
@@ -106,11 +100,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 30,
     color: "#fff",
-    fontSize: 15,
-    backgroundColor: "rgba(0,0,0,.3)"
+    fontSize: 15
+    // backgroundColor: "rgba(0,0,0,.3)"
   },
   img: {
     flex: 1,
-    height: 400
+    height: 300,
+    borderRadius: 20
   }
 });

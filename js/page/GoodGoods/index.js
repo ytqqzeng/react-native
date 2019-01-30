@@ -21,9 +21,10 @@ import {
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
-import Swipper from "../../common/Swipper";
+import Swipper from "./Swipper";
 import Goods from "../../models/goods";
 import StorageUtil, { StorageKey } from "../../models/StorageModel";
+import CuttingLine from "../../common/CuttingLine";
 
 export default class GoodGoods extends Component {
   constructor(props) {
@@ -57,9 +58,9 @@ export default class GoodGoods extends Component {
           }}
           style={{
             height: scaleSize(200),
-            borderColor: "#eee",
-            borderWidth: 1,
-            borderRadius: scaleSize(11)
+            // borderColor: "#eee",
+            // borderWidth: 1,
+            borderRadius: scaleSize(12)
           }}
         />
       </TouchableOpacity>
@@ -113,7 +114,8 @@ export default class GoodGoods extends Component {
           <Image
             style={{
               width: "100%",
-              height: scaleHeight(100)
+              height: scaleHeight(100),
+              borderRadius: scaleSize(7)
             }}
             source={require("../../../res/image/banner/xinongqingdan.jpg")}
           />
@@ -133,7 +135,8 @@ export default class GoodGoods extends Component {
           <Image
             style={{
               width: "100%",
-              height: scaleHeight(100)
+              height: scaleHeight(100),
+              borderRadius: scaleSize(7)
             }}
             source={require("../../../res/image/banner/haowu.jpg")}
           />
@@ -144,18 +147,12 @@ export default class GoodGoods extends Component {
   };
   _editRecommend = () => {
     return (
-      <View style={{ borderColor: "#ccc", borderBottomWidth: 1 }}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-          <Text
-            style={{
-              width: scaleSize(3),
-              height: scaleHeight(15),
-              backgroundColor: "#333",
-              marginRight: scaleSize(5)
-            }}
-          />
-          <Text style={{ fontSize: setSpText2(12) }}>热卖推荐 </Text>
-        </View>
+      <View style={{}}>
+        <CuttingLine
+          title={"你的风格推荐"}
+          subtitle={"最IN你的口味"}
+          style={{ paddingHorizontal: 0 }}
+        />
       </View>
     );
   };
@@ -174,7 +171,8 @@ export default class GoodGoods extends Component {
                 style={{
                   width: scaleSize(100),
                   height: scaleHeight(100),
-                  marginLeft: scaleSize(20)
+                  marginLeft: scaleSize(20),
+                  borderRadius: scaleSize(10)
                 }}
               />
               <Text
@@ -200,7 +198,11 @@ export default class GoodGoods extends Component {
       >
         <Image
           source={require("../../../res/image/banner/5zhe.jpg")}
-          style={{ height: scaleSize(100), width: "100%" }}
+          style={{
+            height: scaleSize(100),
+            width: "100%",
+            borderRadius: scaleSize(12)
+          }}
         />
         {this._goodsCount(35)}
       </TouchableOpacity>
@@ -244,7 +246,7 @@ export default class GoodGoods extends Component {
               style={{
                 height: scaleSize(10),
                 backgroundColor: "#eee",
-                marginVertical: scaleSize(5)
+                marginVertical: scaleSize(20)
               }}
             />
             {this._flatList()}
@@ -252,7 +254,7 @@ export default class GoodGoods extends Component {
               style={{
                 height: scaleSize(10),
                 backgroundColor: "#eee",
-                marginVertical: scaleSize(5)
+                marginVertical: scaleSize(20)
               }}
             />
             {this._countGoods()}

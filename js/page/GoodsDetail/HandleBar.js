@@ -4,9 +4,9 @@ import {
   Dimensions,
   Text,
   View,
+  Image,
   TouchableOpacity
 } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 
 const { width } = Dimensions.get("window");
@@ -25,13 +25,12 @@ export default class HandleBar extends Component {
       >
         <Text
           style={{
-            marginBottom: scaleSize(5),
-            top: scaleSize(-2),
+            flex: 1,
             color: "#fff",
-            padding: 8,
-            borderRadius: 10,
+            padding: 18,
+            fontSize: 14,
             textAlign: "center",
-            backgroundColor: "#E4007F"
+            backgroundColor: "#FC6969"
           }}
         >
           {"付款查看价格"}
@@ -47,13 +46,21 @@ export default class HandleBar extends Component {
           this.props.paymented();
         }}
       >
-        <MaterialCommunityIcons name={"share"} size={40} color={"#fff"} />
+        <Image
+          source={require("../../../res/image/payment_.png")}
+          style={{
+            width: scaleSize(15),
+            height: scaleSize(15),
+            tintColor: "#fff"
+          }}
+        />
         <Text
           style={{
             marginHorizontal: scaleSize(10),
+            paddingVertical: 18,
             color: "#fff",
-            paddingTop: 8,
-            textAlign: "center"
+            textAlign: "center",
+            fontSize: 14
           }}
         >
           {"付定金"}
@@ -61,6 +68,7 @@ export default class HandleBar extends Component {
       </TouchableOpacity>
     );
   };
+  //   已经付定金
   paymented = payment => {
     const { clickBtn } = this.props;
     if (payment) {
@@ -71,7 +79,9 @@ export default class HandleBar extends Component {
             clickBtn();
           }}
         >
-          <Text style={{ color: "#fff", paddingTop: 8, textAlign: "center" }}>
+          <Text
+            style={{ color: "#fff", paddingVertical: 18, textAlign: "center" }}
+          >
             {"购买"}
           </Text>
           <Text style={styles.paymented}>{"你已付定金"}</Text>
@@ -85,8 +95,23 @@ export default class HandleBar extends Component {
             clickBtn();
           }}
         >
-          <MaterialCommunityIcons name={"share"} size={40} color={"#fff"} />
-          <Text style={{ color: "#fff", paddingTop: 8, textAlign: "center" }}>
+          <Image
+            source={require("../../../res/image/payment_48px.png")}
+            style={{
+              width: scaleSize(15),
+              height: scaleSize(15),
+              tintColor: "#fff"
+            }}
+          />
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 14,
+              paddingVertical: 18,
+              marginHorizontal: scaleSize(10),
+              textAlign: "center"
+            }}
+          >
             {"购买"}
           </Text>
         </TouchableOpacity>
@@ -98,7 +123,9 @@ export default class HandleBar extends Component {
     const { payment } = this.props;
     // 设置底部状态栏是否显示一元显示价格的按钮
 
+    // 没有支付查看价格的钱
     let bar = goodDetail.is_viewed_price ? null : this.notCheck();
+    // 是否支付定金
     let isPayment = payment ? null : this.notPayment();
     return (
       <View style={styles.handleBar}>
@@ -112,45 +139,43 @@ export default class HandleBar extends Component {
 const styles = StyleSheet.create({
   paymented: {
     position: "absolute",
-    top: -5,
+    top: 0,
     left: 0,
     width: 80,
     height: 20,
     fontSize: 12,
     color: "#fff",
     borderRadius: 4,
-    backgroundColor: "#CD1076"
+    backgroundColor: "#FC6969"
   },
 
   handleBar: {
     flexDirection: "row",
     justifyContent: "center",
-    height: 50,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: "#000"
+    backgroundColor: "transparent"
   },
   handlePrice: {
+    flexDirection: "row",
+    alignItems: "center",
     width: scaleSize(130),
-    marginBottom: scaleSize(5),
-    textAlign: "center",
-    borderRightWidth: 2,
-    borderRightColor: "#eee"
+    textAlign: "center"
   },
   handlePayment: {
     flex: 1,
     justifyContent: "center",
-    // paddingLeft: 20,
-    // paddingRight: 20,
+    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor: "#333",
     borderRightWidth: 2,
-    borderRightColor: "#eee",
-    flexDirection: "row"
+    borderColor: "#fff"
   },
   handleBuy: {
     flex: 1,
     justifyContent: "center",
-    paddingLeft: 20,
-    paddingRight: 20,
+    alignItems: "center",
+    backgroundColor: "#333",
+    // paddingLeft: 20,
+    // paddingRight: 20,
     flexDirection: "row"
   }
 });

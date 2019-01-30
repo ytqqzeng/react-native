@@ -8,51 +8,17 @@
 
 import React, { Component } from "react";
 import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
-
+import { Label } from ".././../common/Label";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 export default class GoodItem extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-  _purchaseBtn = () => {
-    return (
-      <Text
-        style={{
-          paddingHorizontal: scaleSize(4),
-          paddingVertical: scaleSize(1),
-          backgroundColor: "#FF5656",
-          color: "#fff",
-          height: scaleSize(20),
-          fontSize: setSpText2(14),
-          textAlign: "center"
-        }}
-      >
-        立即抢
-      </Text>
-    );
-  };
-  _newGoodsBtn = () => {
-    return (
-      <Text
-        style={{
-          paddingHorizontal: scaleSize(5),
-          paddingVertical: scaleSize(1),
-          backgroundColor: "#555",
-          borderRadius: scaleSize(10),
-          color: "#fff",
-          textAlign: "center",
-          fontSize: setSpText2(14)
-        }}
-      >
-        新品推荐
-      </Text>
-    );
-  };
   render() {
     const navigation = this.props.navigation;
     let { name, original, is_viewed_price, mktprice } = this.props.info;
-    console.warn("is_viewed_price热门新品::", is_viewed_price);
+
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -76,36 +42,47 @@ export default class GoodItem extends Component {
 
           <View
             style={{
-              flexDirection: "row",
               paddingHorizontal: scaleSize(15),
               justifyContent: "space-between",
               marginBottom: scaleSize(10)
             }}
           >
-            {is_viewed_price ? (
-              <Text
+            <View style={{ flexDirection: "row" }}>
+              <Label
+                title={"新品"}
                 style={{
-                  fontSize: setSpText2(14),
-                  color: "#000"
+                  backgroundColor: "#eee",
+                  color: "#999",
+                  borderWidth: 0,
+                  fontSize: setSpText2(9),
+                  borderRadius: scaleSize(2)
                 }}
-              >
-                ¥:{mktprice}
-              </Text>
-            ) : (
-              this._purchaseBtn()
-            )}
-            <View>{this._newGoodsBtn()}</View>
+              />
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              {is_viewed_price ? (
+                <Text
+                  style={{
+                    fontSize: setSpText2(14),
+                    color: "#000"
+                  }}
+                >
+                  ¥:{mktprice}
+                </Text>
+              ) : (
+                <Label
+                  title={"立即抢"}
+                  style={{
+                    backgroundColor: "#FC6969",
+                    borderRadius: scaleSize(3),
+                    color: "#fff",
+                    borderWidth: 0,
+                    fontSize: setSpText2(14)
+                  }}
+                />
+              )}
+            </View>
           </View>
-          <Image
-            source={require("../../../res/image/new@48.png")}
-            style={{
-              width: scaleSize(45),
-              height: scaleSize(45),
-              position: "absolute",
-              top: 10,
-              right: 10
-            }}
-          />
         </TouchableOpacity>
       </View>
     );

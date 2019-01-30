@@ -18,6 +18,8 @@ import GoodGoods from "../page/GoodGoods";
 import OrderConfirm from "../page/Order/OrderConfirm";
 import OrderPage from "../page/Order/OrderPage";
 import OrderType from "../page/Order/OrderType";
+import Kanke from "../page/Kanke";
+import KankeDetail from "../page/Kanke/KankeDetail";
 
 import SearchPage from "../common/Search";
 import Category from "../page/Category";
@@ -50,6 +52,14 @@ export default (AppNavigator = StackNavigator(
     // 搜索页面
     Search: {
       screen: SearchPage
+    },
+    // 看客页面
+    Kanke: {
+      screen: Kanke
+    },
+    // 看客详情页面
+    KankeDetail: {
+      screen: KankeDetail
     },
     // 用户头像 会员名 地址
     UserInfo: {

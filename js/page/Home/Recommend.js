@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import Goods from "../../models/goods";
+import { Label } from "../../common/Label";
 import StorageUtil from "../../models/StorageModel";
 import { connect } from "react-redux";
 const { width } = Dimensions.get("window");
@@ -76,7 +77,7 @@ class RecommendGood extends Component {
     //     })
     //     .done();
     let foot = 0;
-    Goods.goodSearch({ keyword: "2015", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           dataArray: res.data,
@@ -128,38 +129,7 @@ class RecommendGood extends Component {
   //         </View>
   //     );
   // }
-  _tagBtn = (param, title) => {
-    return (
-      <Text
-        style={{
-          ...param,
-          paddingHorizontal: scaleSize(5),
-          paddingVertical: scaleSize(1),
-          borderRadius: scaleSize(8),
-          textAlign: "center",
-          fontSize: setSpText2(9)
-        }}
-      >
-        {title}
-      </Text>
-    );
-  };
-  _purchaseBtn = () => {
-    return (
-      <Text
-        style={{
-          paddingHorizontal: scaleSize(4),
-          paddingVertical: scaleSize(1),
-          backgroundColor: "#FF5656",
-          color: "#fff",
-          fontSize: setSpText2(9),
-          textAlign: "center"
-        }}
-      >
-        立即抢
-      </Text>
-    );
-  };
+
   _renderItemView = ({ item, index }) => {
     const navigation = this.props.navigation;
     return (
@@ -175,10 +145,12 @@ class RecommendGood extends Component {
       >
         <View
           style={{
-            width: width / 2,
-            borderWidth: 1,
-            borderColor: "#CCC",
-            marginVertical: scaleSize(20),
+            width: (width - scaleSize(20) - 12) / 2,
+            // borderRadius: scaleSize(10),
+            // flex: 1,
+            backgroundColor: "#fff",
+            marginHorizontal: 6,
+            marginVertical: scaleSize(15),
             paddingHorizontal: scaleSize(20),
             paddingVertical: scaleSize(10)
           }}
@@ -216,12 +188,26 @@ class RecommendGood extends Component {
                 ¥:{item.mktprice}
               </Text>
             ) : (
-              this._purchaseBtn()
+              <Label
+                title={`立即抢`}
+                style={{
+                  borderRadius: scaleSize(2),
+                  backgroundColor: "#FC6969",
+                  color: "#fff",
+                  borderColor: "#FF5656",
+                  borderWidth: 1
+                }}
+              />
             )}
-            {this._tagBtn(
-              { color: "#FF5656", borderColor: "#FF5656", borderWidth: 1 },
-              "猜你喜欢"
-            )}
+            <Label
+              title={`猜你喜欢`}
+              style={{
+                color: "#999",
+                backgroundColor: "#eee",
+                borderWidth: 0,
+                borderRadius: scaleSize(2)
+              }}
+            />
           </View>
         </View>
       </TouchableOpacity>
@@ -253,6 +239,7 @@ class RecommendGood extends Component {
         <Image
           source={item.img}
           style={{
+            borderRadius: scaleSize(8),
             width: scaleSize(120),
             height: scaleSize(120)
           }}
@@ -264,10 +251,17 @@ class RecommendGood extends Component {
             marginVertical: scaleSize(10)
           }}
         >
-          {this._tagBtn(
-            { backgroundColor: "#666", color: "#fff" },
-            `上新${item.num}款`
-          )}
+          <Label
+            title={`上新${item.num}款`}
+            style={{
+              backgroundColor: "#FC6969",
+              color: "#fff",
+
+              borderRadius: scaleSize(2),
+              borderColor: "#FF5656",
+              borderWidth: 1
+            }}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -333,15 +327,15 @@ class RecommendGood extends Component {
   renderData() {
     const tmpData = [
       {
-        img: require("../../../res/image/banner/nvbao.jpg"),
+        img: require("../../../res/image/banner/catagory1.jpg"),
         num: 133
       },
       {
-        img: require("../../../res/image/banner/nvxie.jpg"),
+        img: require("../../../res/image/banner/catagory2.jpg"),
         num: 143
       },
       {
-        img: require("../../../res/image/banner/nvzhuang.jpg"),
+        img: require("../../../res/image/banner/catagory3.jpg"),
         num: 99
       }
     ];
@@ -352,10 +346,10 @@ class RecommendGood extends Component {
             <Text
               style={{
                 textAlign: "center",
-                fontSize: setSpText2(12),
-                color: "#000",
+                fontSize: setSpText2(14),
+                color: "#333",
                 backgroundColor: "#fff",
-                paddingVertical: scaleSize(10)
+                paddingVertical: scaleSize(12)
               }}
             >
               为你推荐
@@ -367,15 +361,17 @@ class RecommendGood extends Component {
             />
           </View>
           <View style={{ height: 5, backgroundColor: "#fff" }} />
-          <FlatList
-            data={this.state.dataArray}
-            renderItem={this._renderItemView}
-            ListFooterComponent={this._renderFooter.bind(this)}
-            onEndReached={this._onEndReached.bind(this)}
-            onEndReachedThreshold={1}
-            numColumns={2}
-            // ItemSeparatorComponent={this._separator} 每个Item的分割线
-          />
+          <View style={{ paddingHorizontal: scaleSize(10) }}>
+            <FlatList
+              data={this.state.dataArray}
+              renderItem={this._renderItemView}
+              ListFooterComponent={this._renderFooter.bind(this)}
+              onEndReached={this._onEndReached.bind(this)}
+              onEndReachedThreshold={1}
+              numColumns={2}
+              // ItemSeparatorComponent={this._separator} 每个Item的分割线
+            />
+          </View>
         </ScrollView>
       </View>
     );

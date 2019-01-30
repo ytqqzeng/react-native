@@ -81,9 +81,9 @@ export default class Category extends Component {
           },
           this.state.selectedRootCate === index
             ? {
-                backgroundColor: "#F5F5F5",
+                backgroundColor: "#DDD",
                 borderLeftWidth: scaleSize(3),
-                borderLeftColor: "red"
+                borderLeftColor: "#FC6969"
               }
             : { backgroundColor: "white" }
         ]}
@@ -117,7 +117,7 @@ export default class Category extends Component {
         <Text
           style={{
             fontSize: setSpText2(11),
-            color: this.state.selectedRootCate === index ? "red" : "#333"
+            color: this.state.selectedRootCate === index ? "#FC6969" : "#333"
           }}
         >
           {title}

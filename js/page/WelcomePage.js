@@ -35,10 +35,10 @@ class WelcomePage extends Component {
     const { navigation, loginStaus, state } = this.props;
     console.warn("state::", state);
     if (loginStaus) {
-      console.warn("已经登陆");
+      console.warn("已经登录");
       navigation.dispatch(resetAction);
     } else {
-      console.warn("没有登陆");
+      console.warn("没有登录");
     }
     try {
       WeChat.registerApp("wx1a76ca32a2015cda");
@@ -145,7 +145,7 @@ class WelcomePage extends Component {
             btnStyle={styles.telBtn}
             underlayColor="#eee"
             textStyle={styles.telText}
-            btnName="账号密码登陆"
+            btnName="账号密码登录"
             onPress={() => {
               navigation.navigate("Login", { name: "参数" });
             }}
@@ -162,7 +162,7 @@ class WelcomePage extends Component {
               paddingVertical: 4
             }}
           >
-            第 三 方 登 陆
+            第 三 方 登 录
           </Text>
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={this._wxLogin}>
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FC6969",
     borderColor: "#666",
 
-    borderRadius: 22.5
+    borderRadius: 5
   },
   telText: {
     color: "#fff"

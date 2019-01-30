@@ -80,6 +80,34 @@ export default class ViewUtils {
       </TouchableOpacity>
     );
   }
+  static getLeftButtonForGoodsDetail(callBack) {
+    return (
+      <TouchableOpacity style={{ padding: 25 }} onPress={callBack}>
+        <Image
+          style={{
+            width: scaleSize(24),
+            height: scaleHeight(24)
+            // tintColor: "#000"
+          }}
+          source={require("../../res/image/find_back_black.png")}
+        />
+      </TouchableOpacity>
+    );
+  }
+  static getRightButtonForGoodsDetail(callBack) {
+    return (
+      <TouchableOpacity style={{ alignItems: "center" }} onPress={callBack}>
+        <Image
+          style={{
+            width: scaleSize(24),
+            height: scaleHeight(24),
+            marginRight: scaleSize(20)
+          }}
+          source={require("../../res/image/find_more_black.png")}
+        />
+      </TouchableOpacity>
+    );
+  }
 
   static getRightButton(title, callBack) {
     return (

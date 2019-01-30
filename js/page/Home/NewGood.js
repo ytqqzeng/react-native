@@ -24,7 +24,6 @@ import CuttingLine from "../../common/CuttingLine";
 import GoodItem from "./GoodItem";
 import ThemeRecommend from "./ThemeRecommend";
 
-import EndLine from "../../common/EndLine";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import StorageUtil from "../../models/StorageModel";
 import { connect } from "react-redux";
@@ -46,6 +45,7 @@ class NewGood extends Component {
   //     console.warn("params::", params);
   //   }
   goodItems(data, index) {
+    console.warn("data::", data);
     return (
       <GoodItem
         index={index}
@@ -58,10 +58,9 @@ class NewGood extends Component {
   }
   _updateData = () => {
     const { member_id } = this.props.userInfo;
-    console.warn("userInfo::", this.props.userInfo);
     console.warn("member_idttt::", member_id);
     // swipper的数据
-    Goods.goodSearch({ keyword: "女装", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           swipperArray: res.data
@@ -70,7 +69,7 @@ class NewGood extends Component {
       }
     });
     // 新品的数据
-    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           newGoodsDate: res.data
@@ -79,7 +78,7 @@ class NewGood extends Component {
       }
     });
     // 你的风格 商品
-    Goods.goodSearch({ keyword: "2015", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           styleGoodsDate: res.data
@@ -88,7 +87,7 @@ class NewGood extends Component {
       }
     });
     // 主题 推荐
-    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
       if (res.result == 1) {
         var data = res.data.slice(0, 4);
         this.setState({
@@ -133,27 +132,24 @@ class NewGood extends Component {
           <View style={styles.swipperWapper}>
             <Swipper
               data={this.state.swipperArray}
-              isShowText={true}
+              isShowText={false}
               {...this.props}
               updateData={this._updateData}
             />
           </View>
           <View
             style={{
-              //   marginLeft: 30,
-              //   marginRight: 30,
-              paddingTop: 40,
               backgroundColor: "#EEE"
             }}
           >
-            <CuttingLine style={{ left: -20 }} title={"热门新品"} />
-            {/* {this._renderTitle("- 热 门 新 品 -", "NEW ARRIVALS")} */}
+            <CuttingLine title={"热门新品推荐"} subtitle={"Top精选品质好货"} />
+
             <View style={{ marginHorizontal: scaleSize(15) }}>
               {this.state.newGoodsDate.map((item, i, arr) => {
                 return this.goodItems(item, i);
               })}
             </View>
-            <CuttingLine title={"你的风格"} />
+            <CuttingLine title={"你的风格推荐"} subtitle={"最IN你的口味"} />
             <View
               style={{
                 marginBottom: scaleSize(20),
@@ -167,7 +163,6 @@ class NewGood extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity
-                      style={{}}
                       key={index}
                       onPress={() => {
                         navigation.navigate("GoodsDetail", {
@@ -183,7 +178,8 @@ class NewGood extends Component {
                         style={{
                           width: scaleSize(100),
                           height: scaleHeight(100),
-                          marginLeft: scaleSize(20)
+                          marginLeft: scaleSize(20),
+                          borderRadius: scaleSize(5)
                         }}
                       />
                     </TouchableOpacity>
@@ -192,7 +188,7 @@ class NewGood extends Component {
                 horizontal={true}
               />
             </View>
-            <CuttingLine title={"主题推荐"} />
+            <CuttingLine title={"主题热卖推荐"} subtitle={"HOT热销主题商品"} />
             <View style={styles.themeRecommend}>
               {this.state.themeGoodsDate.map((item, i, arr) => {
                 return (
@@ -206,7 +202,6 @@ class NewGood extends Component {
                 );
               })}
             </View>
-            <EndLine title={"没有更多了"} />
           </View>
         </View>
       </ScrollView>
@@ -225,20 +220,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   swipperWapper: {
-    flex: 1,
-    marginTop: 20
-  },
-  page1: {
-    flex: 1,
-    backgroundColor: "red"
-  },
-  page2: {
-    flex: 1,
-    backgroundColor: "green"
-  },
-  image: {
-    height: 22,
-    width: 22
+    flex: 1
   },
   themeRecommend: {
     marginBottom: 40,

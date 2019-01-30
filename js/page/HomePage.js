@@ -14,6 +14,7 @@ import HomeIndex from "../page/Home";
 import MyPage from "../page/My";
 import GoodGoods from "../page/GoodGoods";
 import Category from "../page/Category";
+import Kanke from "../page/Kanke";
 
 export default class HomePage extends Component {
   constructor(props) {
@@ -78,6 +79,28 @@ export default class HomePage extends Component {
             onPress={() => this.setState({ selectedTab: "tb_classify" })}
           >
             <Category navigation={navigation} />
+          </TabNavigator.Item>
+          <TabNavigator.Item
+            selected={this.state.selectedTab === "tb_kanke"}
+            title={"看客"}
+            titleStyle={{ fontSize: setSpText2(9) }}
+            // 导航文字选中的颜色
+            selectedTitleStyle={{ color: "#FF3C50" }}
+            renderIcon={() => (
+              <Image
+                style={styles.image}
+                source={require("../../res/image/classify.png")}
+              />
+            )}
+            renderSelectedIcon={() => (
+              <Image
+                style={[styles.image, { tintColor: "#FF3C50" }]}
+                source={require("../../res/image/classify.png")}
+              />
+            )}
+            onPress={() => this.setState({ selectedTab: "tb_kanke" })}
+          >
+            <Kanke navigation={navigation} />
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_goodgoods"}

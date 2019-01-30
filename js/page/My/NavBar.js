@@ -42,7 +42,7 @@ export default class GoodsNavBar extends Component {
 
     let titleView = (
       <Text ellipsizeMode="head" numberOfLines={1} style={styles.title}>
-        商品详情
+        个人中心
       </Text>
     );
 
