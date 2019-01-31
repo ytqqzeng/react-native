@@ -45,7 +45,6 @@ class NewGood extends Component {
   //     console.warn("params::", params);
   //   }
   goodItems(data, index) {
-    console.warn("data::", data);
     return (
       <GoodItem
         index={index}
@@ -69,7 +68,7 @@ class NewGood extends Component {
       }
     });
     // 新品的数据
-    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           newGoodsDate: res.data
@@ -78,7 +77,7 @@ class NewGood extends Component {
       }
     });
     // 你的风格 商品
-    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           styleGoodsDate: res.data
@@ -87,7 +86,7 @@ class NewGood extends Component {
       }
     });
     // 主题 推荐
-    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
       if (res.result == 1) {
         var data = res.data.slice(0, 4);
         this.setState({

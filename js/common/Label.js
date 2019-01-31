@@ -6,8 +6,9 @@ export const Label = ({ title, style }) => {
     <Text
       style={{
         color: "#FC6969",
+        textAlign: "center",
         paddingHorizontal: scaleSize(5),
-        paddingVertical: scaleSize(1),
+        // paddingVertical: scaleSize(1),
         fontSize: setSpText2(7),
         borderColor: "#FC6969",
         borderWidth: 1,

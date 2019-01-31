@@ -74,7 +74,11 @@ export default class Kanke extends Component {
         <View>
           <Image
             source={item.original}
-            style={{ height: scaleSize(150), borderRadius: scaleSize(10) }}
+            style={{
+              height: scaleSize(150),
+              width: "100%",
+              borderRadius: scaleSize(10)
+            }}
           />
           <View style={{ alignItems: "center" }}>
             <Image

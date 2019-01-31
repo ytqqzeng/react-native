@@ -72,20 +72,20 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     color: "#222",
-    fontSize: setSpText2(8),
+    fontSize: setSpText2(11),
     marginHorizontal: scaleSize(8)
     // marginTop: scaleSize(10)
   },
   desc: {
     textAlign: "center",
     color: "#999",
-    fontSize: setSpText2(7),
+    fontSize: setSpText2(10),
     margin: 5
   },
   image: {
     flex: 1,
-    width: 220,
-    margin: "auto",
-    margin: 3
+    width: scaleSize(150)
+    // margin: "auto",
+    // margin: 3
   }
 });

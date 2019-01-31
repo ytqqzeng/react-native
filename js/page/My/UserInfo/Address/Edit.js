@@ -246,7 +246,8 @@ class EditAdress extends Component {
                 paddingVertical: scaleSize(10),
                 backgroundColor: "#FC6969",
                 color: "#fff",
-                fontSize: setSpText2(14)
+                fontSize: setSpText2(14),
+                borderRadius: scaleSize(5)
               }}
               onPress={() => {
                 this._save();

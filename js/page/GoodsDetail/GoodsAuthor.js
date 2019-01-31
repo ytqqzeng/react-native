@@ -152,7 +152,14 @@ export default class GoodsAuthor extends Component {
   // 留言
   _noteTitle = avatarName => {
     return (
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          marginTop: scaleSize(10),
+          alignItems: "center"
+        }}
+      >
         <Image
           style={styles.recArrow2}
           source={require("../../../res/pageImage/icon_left_arrow.png")}
@@ -165,7 +172,7 @@ export default class GoodsAuthor extends Component {
           style={styles.recArrow2}
           source={require("../../../res/pageImage/icon_left_arrow.png")}
         />
-        <Text style={styles.noteTitle}>{`给${avatarName}的留言`}</Text>
+        <Text style={styles.noteTitle}>{`评价留言`}</Text>
         <Image
           style={styles.recArrow2}
           source={require("../../../res/pageImage/icon_right_arrow.png")}
@@ -203,15 +210,14 @@ export default class GoodsAuthor extends Component {
           <Avartar
             avatarName={item.avatarName}
             avatarUrl={item.avatarUrl}
-            size={{ width: 30, height: 30 }}
+            size={{ width: scaleSize(25), height: scaleSize(25) }}
           />
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               source={require("../../../res/image/praise.png")}
               style={{
-                width: 16,
-                height: 15,
-                top: 4,
+                width: scaleSize(14),
+                height: scaleSize(14),
                 tintColor: "#333",
                 marginRight: 5
               }}
@@ -250,12 +256,11 @@ export default class GoodsAuthor extends Component {
   render() {
     let { avatarUrl, avatarName, authorDescrip, note } = this.state.authorInfo;
     const { recommend } = this.props;
-    let follow = this.state.isFollow
-      ? require("../../../res/image/favorited.png")
-      : require("../../../res/image/favorite.png");
+    console.warn("recom2212men111d::", recommend);
+
     return (
       <View style={styles.container}>
-        <View style={styles.avartarWrapper}>
+        {/* <View style={styles.avartarWrapper}>
           <Avartar
             avatarName={avatarName}
             avatarUrl={avatarUrl}
@@ -265,13 +270,14 @@ export default class GoodsAuthor extends Component {
         <Text style={{ fontSize: 17, color: "#666", textAlign: "center" }}>
           {authorDescrip}
         </Text>
-        <View style={{ marginTop: 10, marginBottom: 10 }} />
+        <View style={{ marginTop: 10, marginBottom: 10 }} /> */}
         {/* {this._follow(follow)} */}
-        {this._recommend(avatarName)}
-        {this._recommendDetail(recommend)}
+        {/* {this._recommend(avatarName)} */}
+
         {this._noteTitle(avatarName)}
         {this._notes(note)}
         {this._moreNote()}
+        {this._recommendDetail(recommend)}
       </View>
     );
   }
@@ -299,15 +305,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     top: 3,
-    marginRight: 10,
-    marginLeft: 10
+    marginHorizontal: 10
   },
   recArrow2: {
     width: 20,
     height: 20,
-    top: 14,
-    marginRight: 10,
-    marginLeft: 10
+    marginHorizontal: 7
   },
   recGoodsDetail: {
     width: "100%",
@@ -321,13 +324,17 @@ const styles = StyleSheet.create({
     height: scaleSize(150),
     paddingLeft: scaleSize(15),
     paddingVertical: scaleSize(15),
-    backgroundColor: "#999"
+    backgroundColor: "#ddd"
   },
   noteTitle: {
-    fontSize: 18,
+    fontSize: setSpText2(14),
     color: "#fff",
     backgroundColor: "#222",
-    padding: 10
+    paddingHorizontal: scaleSize(40),
+    paddingVertical: scaleSize(4),
+    borderColor: "#999",
+    borderWidth: 2,
+    borderRadius: 2
   },
   notes: {
     flex: 1
@@ -348,22 +355,22 @@ const styles = StyleSheet.create({
     color: "#777",
     borderWidth: 1,
     borderColor: "#999",
-    textAlign: "center",
+    textAlign: "left",
     backgroundColor: "#E5FAFA",
     borderRadius: 3,
     padding: 20,
-    paddingBottom: 40
+    paddingBottom: 40,
+    fontSize: setSpText2(13)
   },
   moreNotes: {
-    paddingLeft: 30,
-    paddingRight: 30,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingHorizontal: 35,
+    paddingVertical: 10,
+    fontSize: setSpText2(14),
     backgroundColor: "#707070",
     color: "#fff",
-    borderColor: "#B7B7B7",
+    borderColor: "#999",
     borderWidth: 2,
-    borderRadius: 3
+    borderRadius: 2
   },
   moreNotesContainer: {
     flex: 1,

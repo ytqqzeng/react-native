@@ -28,7 +28,7 @@ export default class HandleBar extends Component {
             flex: 1,
             color: "#fff",
             padding: 18,
-            fontSize: 14,
+            fontSize: scaleSize(12),
             textAlign: "center",
             backgroundColor: "#FC6969"
           }}
@@ -60,7 +60,7 @@ export default class HandleBar extends Component {
             paddingVertical: 18,
             color: "#fff",
             textAlign: "center",
-            fontSize: 14
+            fontSize: scaleSize(12)
           }}
         >
           {"付定金"}
@@ -80,7 +80,12 @@ export default class HandleBar extends Component {
           }}
         >
           <Text
-            style={{ color: "#fff", paddingVertical: 18, textAlign: "center" }}
+            style={{
+              fontSize: scaleSize(12),
+              color: "#fff",
+              paddingVertical: 18,
+              textAlign: "center"
+            }}
           >
             {"购买"}
           </Text>
@@ -106,7 +111,7 @@ export default class HandleBar extends Component {
           <Text
             style={{
               color: "#fff",
-              fontSize: 14,
+              fontSize: scaleSize(12),
               paddingVertical: 18,
               marginHorizontal: scaleSize(10),
               textAlign: "center"
@@ -141,9 +146,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    width: 80,
+    // width: 80,
+    paddingHorizontal: 10,
     height: 20,
-    fontSize: 12,
+    fontSize: scaleSize(8),
     color: "#fff",
     borderRadius: 4,
     backgroundColor: "#FC6969"

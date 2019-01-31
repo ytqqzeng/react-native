@@ -106,15 +106,15 @@ class MyPage extends Component {
   };
   _renderBody = () => {
     const { navigation, goodsInfo } = this.props;
-    console.warn("goodsInfo::", goodsInfo);
+    // console.warn("goodsInfo::", goodsInfo);
 
     const images =
-      goodsInfo.checkedPriceGoodsList.length > 4
-        ? goodsInfo.checkedPriceGoodsList.slice(0, 4)
+      goodsInfo.checkedPriceGoodsList.length > 3
+        ? goodsInfo.checkedPriceGoodsList.slice(0, 3)
         : goodsInfo.checkedPriceGoodsList;
     const imagesFavorite =
-      goodsInfo.favoriteGoodsList.length > 4
-        ? goodsInfo.favoriteGoodsList.slice(0, 4)
+      goodsInfo.favoriteGoodsList.length > 3
+        ? goodsInfo.favoriteGoodsList.slice(0, 3)
         : goodsInfo.favoriteGoodsList;
     return (
       <View style={{ padding: 30, flex: 1 }}>
@@ -143,6 +143,7 @@ class MyPage extends Component {
                         width: 30,
                         height: 30,
                         borderRadius: 15,
+                        marginHorizontal: 3,
                         borderColor: "#eee",
                         borderWidth: 1
                       }}
@@ -174,6 +175,7 @@ class MyPage extends Component {
                       style={{
                         width: 30,
                         height: 30,
+                        marginHorizontal: 3,
                         borderRadius: 15,
                         borderColor: "#eee",
                         borderWidth: 1
@@ -348,7 +350,8 @@ export default connect(mapStateToProps)(MyPage);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAB9B2"
+    backgroundColor: "#fff"
+    // backgroundColor: "#FAB9B2",
   },
   btn: {
     margin: 5,
@@ -356,11 +359,11 @@ const styles = StyleSheet.create({
     padding: 2
   },
   headSection: {
-    height: scaleSize(100),
+    // height: scaleSize(100),
     width: width,
-    padding: 30,
-    backgroundColor: "#FAB9B2",
-    paddingTop: 60
+    padding: scaleSize(30),
+    backgroundColor: "#FAB9B2"
+    // paddingTop: 60
   },
   avatar: {
     flex: 1,

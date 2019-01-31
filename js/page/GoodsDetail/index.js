@@ -191,9 +191,8 @@ class GoodsDetail extends Component {
     return ImgUrlArr;
   };
   _goodDetail = () => {
-    const { goodDetail, viewHeight } = this.state;
+    const { goodDetail, viewHeight, recommend } = this.state;
     const imgArr = this._utilImg(goodDetail.intro);
-    // console.warn("goodDetail::", goodDetail);
 
     const scrollY = Animated.add(
       this.state.scrollY,
@@ -253,7 +252,7 @@ class GoodsDetail extends Component {
                 style={{
                   paddingVertical: scaleSize(10),
                   color: "#333",
-                  fontSize: setSpText2(13)
+                  fontSize: setSpText2(16)
                 }}
               >
                 {goodDetail.name}
@@ -266,7 +265,8 @@ class GoodsDetail extends Component {
                   style={{
                     marginRight: 10,
                     borderRadius: scaleSize(3),
-                    fontSize: setSpText2(8)
+                    fontSize: setSpText2(8),
+                    textAlign: "center"
                   }}
                 />
                 <Label
@@ -291,7 +291,7 @@ class GoodsDetail extends Component {
           </View>
           <View>
             <GoodsAuthor
-              data={this.state.recommend}
+              recommend={recommend}
               navigation={this.props.navigation}
             />
           </View>

@@ -29,7 +29,7 @@ export default class HomePage extends Component {
       <View style={styles.container}>
         <TabNavigator
           tabBarStyle={{
-            height: scaleHeight(45),
+            height: scaleHeight(48),
             overflow: "hidden",
             backgroundColor: "#fff"
           }}
@@ -37,7 +37,7 @@ export default class HomePage extends Component {
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_home"}
             title={"首页"}
-            titleStyle={{ fontSize: setSpText2(9) }}
+            titleStyle={{ fontSize: setSpText2(10) }}
             // 导航文字选中的颜色
             selectedTitleStyle={{ color: "#FF3C50" }}
             renderIcon={() => (
@@ -61,7 +61,7 @@ export default class HomePage extends Component {
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_classify"}
             title={"分类"}
-            titleStyle={{ fontSize: setSpText2(9) }}
+            titleStyle={{ fontSize: setSpText2(10) }}
             // 导航文字选中的颜色
             selectedTitleStyle={{ color: "#FF3C50" }}
             renderIcon={() => (
@@ -83,19 +83,19 @@ export default class HomePage extends Component {
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_kanke"}
             title={"看客"}
-            titleStyle={{ fontSize: setSpText2(9) }}
+            titleStyle={{ fontSize: setSpText2(10) }}
             // 导航文字选中的颜色
             selectedTitleStyle={{ color: "#FF3C50" }}
             renderIcon={() => (
               <Image
-                style={styles.image}
-                source={require("../../res/image/classify.png")}
+                style={[styles.image]}
+                source={require("../../res/image/look.png")}
               />
             )}
             renderSelectedIcon={() => (
               <Image
                 style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/classify.png")}
+                source={require("../../res/image/look.png")}
               />
             )}
             onPress={() => this.setState({ selectedTab: "tb_kanke" })}
@@ -105,7 +105,7 @@ export default class HomePage extends Component {
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_goodgoods"}
             title={"好物"}
-            titleStyle={{ fontSize: setSpText2(9) }}
+            titleStyle={{ fontSize: setSpText2(10) }}
             // 导航文字选中的颜色
             selectedTitleStyle={{ color: "#FF3C50" }}
             renderIcon={() => (
@@ -127,7 +127,7 @@ export default class HomePage extends Component {
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_mine"}
             title={"我的"}
-            titleStyle={{ fontSize: setSpText2(9) }}
+            titleStyle={{ fontSize: setSpText2(10) }}
             // 导航文字选中的颜色
             selectedTitleStyle={{ color: "#FF3C50" }}
             renderIcon={() => (
@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   image: {
-    height: scaleHeight(19),
-    width: scaleSize(18),
+    height: scaleHeight(20),
+    width: scaleSize(20),
     tintColor: "#222222",
     marginBottom: scaleSize(2.5)
   }

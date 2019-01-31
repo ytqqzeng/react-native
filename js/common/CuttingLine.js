@@ -16,7 +16,7 @@ export default (CuttingLine = ({ title, subtitle, style }) => {
         <View style={{ width: scaleSize(5), backgroundColor: "#FC6969" }} />
         <Text
           style={{
-            fontSize: setSpText2(12),
+            fontSize: setSpText2(14),
             marginLeft: scaleSize(8),
             fontWeight: "bold",
             color: "#333",
@@ -28,7 +28,7 @@ export default (CuttingLine = ({ title, subtitle, style }) => {
       </View>
       <Text
         style={{
-          fontSize: setSpText2(12),
+          fontSize: setSpText2(14),
           letterSpacing: 1,
           color: "#999"
         }}

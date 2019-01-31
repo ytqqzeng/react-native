@@ -148,6 +148,7 @@ class UserInfo extends Component {
         <View>
           <List>
             <Item
+              style={{ fontSize: 30, color: "red" }}
               extra={
                 <Image
                   source={{
@@ -281,10 +282,10 @@ class UserInfo extends Component {
               birthday === null
             }
             style={{
-              margin: 15,
+              margin: scaleSize(30),
               backgroundColor: "#FC6969",
-              borderColor: "#FC6969",
-              borderRadius: 0
+              borderWidth: 0,
+              borderRadius: scaleSize(3)
             }}
             onClick={() => {
               this._submit();

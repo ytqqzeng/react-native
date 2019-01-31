@@ -69,8 +69,8 @@ export default class StatusBar extends Component {
           <Image
             source={require("../../../res/image/view.png")}
             style={{
-              width: scaleSize(20),
-              height: scaleSize(20)
+              width: scaleSize(18),
+              height: scaleSize(18)
             }}
           />
           <Text style={styles.text}>{viewNum}</Text>
@@ -109,22 +109,20 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   viewNum: {
-    // width: scaleSize(70),
     flex: 1,
     height: scaleHeight(55),
     flexDirection: "row",
-    justifyContent: "flex-start",
-    paddingLeft: scaleSize(10),
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#3A3A3A"
   },
   text: {
-    fontSize: setSpText2(10),
+    fontSize: setSpText2(12),
     color: "#fff",
     marginLeft: scaleSize(10)
   },
   endTime: {
-    width: scaleSize(150),
+    width: scaleSize(130),
     height: scaleHeight(55),
     justifyContent: "space-around",
     alignItems: "center",
@@ -133,7 +131,7 @@ const styles = StyleSheet.create({
   time: {
     backgroundColor: "#000",
     color: "#fff",
-    fontSize: 18,
+    fontSize: setSpText2(12),
     marginLeft: 3
   },
   payment: {
@@ -151,10 +149,12 @@ const styles = StyleSheet.create({
   },
   price: {
     color: "#fff",
+    fontSize: setSpText2(12),
     marginLeft: scaleSize(13)
   },
   salePrice: {
-    width: scaleSize(35),
+    paddingHorizontal: scaleSize(3),
+    fontSize: setSpText2(12),
     textAlign: "center",
     color: "#fff",
     paddingVertical: scaleSize(7),

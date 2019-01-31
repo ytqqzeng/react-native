@@ -112,7 +112,8 @@ class Address extends Component {
               <Label
                 title={"默认"}
                 style={{
-                  fontSize: setSpText2(11)
+                  fontSize: setSpText2(11),
+                  borderRadius: scaleSize(3)
                 }}
               />
             ) : null}

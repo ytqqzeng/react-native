@@ -35,7 +35,7 @@ class SearchPage extends Component {
       isShowSearch: true, // 是否显示搜索初始页面
       history: [], //历史搜索记录
       keyword: "",
-      hotSearch: ["口红", "毛衣", "袜子", "保温杯"],
+      hotSearch: ["男", "女", "锅", "保温杯"],
       goodsList: []
     };
   }

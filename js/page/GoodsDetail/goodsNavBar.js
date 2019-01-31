@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height:
       Platform.OS === "ios"
-        ? scaleHeight(NAV_BAR_HEIGHT_IOS)
-        : scaleHeight(NAV_BAR_HEIGHT_ANDROID)
+        ? scaleSize(NAV_BAR_HEIGHT_IOS)
+        : scaleSize(NAV_BAR_HEIGHT_ANDROID)
   },
   navBarTitleContainer: {
     alignItems: "center",

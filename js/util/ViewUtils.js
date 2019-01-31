@@ -86,7 +86,7 @@ export default class ViewUtils {
         <Image
           style={{
             width: scaleSize(24),
-            height: scaleHeight(24)
+            height: scaleSize(24)
             // tintColor: "#000"
           }}
           source={require("../../res/image/find_back_black.png")}
@@ -100,7 +100,7 @@ export default class ViewUtils {
         <Image
           style={{
             width: scaleSize(24),
-            height: scaleHeight(24),
+            height: scaleSize(24),
             marginRight: scaleSize(20)
           }}
           source={require("../../res/image/find_more_black.png")}
@@ -124,7 +124,7 @@ export default class ViewUtils {
         <Image
           style={{
             width: scaleSize(19),
-            height: scaleHeight(19),
+            height: scaleSize(19),
             marginRight: scaleSize(20),
             marginBottom: scaleSize(0),
             tintColor: "#000"
