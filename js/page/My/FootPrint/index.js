@@ -24,7 +24,7 @@ import Goods from "../../../models/goods";
 function getArrayIndex(arr, arg) {
   var flag;
   arr.forEach(function(item, i) {
-    if (item.name === arg) {
+    if (item.title === arg) {
       flag = i + 1;
     }
   });
@@ -33,7 +33,7 @@ function getArrayIndex(arr, arg) {
 // 把获取的数据重新组装符合SectionList的数据格式
 function newArray(arr) {
   return arr.reduce((acc, cur) => {
-    var flag = getArrayIndex(acc, cur.name);
+    var flag = getArrayIndex(acc, cur.tmpDate);
     if (flag) {
       acc[flag - 1].data.push(cur);
     } else {
@@ -74,7 +74,7 @@ export default class FootPrint extends Component {
       return { ...item, tmpDate };
     });
     const ArrayData = newArray(fixData);
-    console.warn("ArrayData::", ArrayData);
+
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -85,16 +85,17 @@ export default class FootPrint extends Component {
             navigation.goBack();
           })}
         />
-        <Text>55</Text>
+
         <SectionList
-          renderItem={({ item, index, section }) => (
-            <Text key={index}>{item}</Text>
-          )}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={{ fontWeight: "bold" }}>{title}</Text>
-          )}
+          renderItem={({ item, index, section }) => {
+            console.warn("item::", item);
+            return <Text key={index}>{item.name}</Text>;
+          }}
+          renderSectionHeader={({ section: { title } }) => {
+            return <Text style={{ fontWeight: "bold" }}>{title}</Text>;
+          }}
           sections={ArrayData}
-          keyExtractor={(item, index) => item + index}
+          //   keyExtractor={(item, index) => item + index}
         />
       </View>
     );
