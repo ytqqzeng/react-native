@@ -1,5 +1,5 @@
 /**
- *
+ *商品分类
  */
 import React, { Component } from "react";
 import {
@@ -125,7 +125,9 @@ export default class Category extends Component {
       </TouchableOpacity>
     );
   };
-  // 渲染左边列表
+  /**
+   * 渲染左边列表
+   */
   renderRootCate() {
     const { RootData } = this.state;
     let data = [];
@@ -137,6 +139,7 @@ export default class Category extends Component {
     return (
       <View style={{ backgroundColor: "#F5F5F5" }}>
         <FlatList
+          keyExtractor={item => item.title}
           ref={flatList => (this._flatList = flatList)}
           data={data}
           ListHeaderComponent={() => <View />}
@@ -167,7 +170,11 @@ export default class Category extends Component {
       </View>
     );
   }
-
+  /**
+   * 右边单个section 里面的单个分类
+   * @param {*} item
+   * @param {*} index
+   */
   renderCell(item, index) {
     const { navigation } = this.props;
     return (
@@ -202,7 +209,9 @@ export default class Category extends Component {
       </TouchableOpacity>
     );
   }
-
+  /**
+   * 右边单个section
+   */
   renderItem(item) {
     // // 获取到需要被渲染的单个section的数据
     let data = item.section.data;
@@ -212,7 +221,9 @@ export default class Category extends Component {
       </View>
     ) : null;
   }
-
+  /**
+   * 渲染右边边列表
+   */
   renderItemCate() {
     const { ItemData } = this.state;
     if (ItemData.length == 0) return null;

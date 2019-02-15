@@ -158,11 +158,11 @@ class NewGood extends Component {
               }}
             >
               <FlatList
+                keyExtractor={item => item.name}
                 data={this.state.styleGoodsDate}
                 renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity
-                      key={index}
                       onPress={() => {
                         navigation.navigate("GoodsDetail", {
                           goodIndex: index,

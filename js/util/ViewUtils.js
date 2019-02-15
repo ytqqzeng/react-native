@@ -182,6 +182,26 @@ export default class ViewUtils {
       </TouchableHighlight>
     );
   }
+  /**
+   * 发布按钮
+   * @param callBack
+   * @returns {XML}
+   */
+  static getSubmitButton(title, callBack) {
+    return (
+      <TouchableHighlight underlayColor={"transparent"} onPress={callBack}>
+        <Text
+          style={{
+            fontSize: setSpText2(12),
+            marginRight: scaleSize(10),
+            color: "#FC6969"
+          }}
+        >
+          {title}
+        </Text>
+      </TouchableHighlight>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
 /**
- * Sample React Native App
+ * 订单确认页
  * https://github.com/facebook/react-native
  *
  * @format
@@ -25,23 +25,52 @@ import Order from "../../models/order";
 import User from "../../models/user";
 import { connect } from "react-redux";
 import { Label } from "../../common/Label";
+import { updateUserInfo } from "../../actions/user";
 class OrderConfirm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataArr: [],
       addr: {}, // 一条地址信息
+      address_id: 0, // 地址ID
+      expressFee: 0, //快递费
       remark: "", //备注
+      advanceCount: 0, // 使用多少之前的预存款
       goodsData: [] // 商品数据
     };
   }
   /**
+   * 获取快递费用
+   */
+  _getExpressFee = () => {
+    const { address_id, goodsData } = this.state;
+    const { goods_id } = goodsData;
+    const params = {
+      address_id,
+      goods_id
+    };
+
+    User.getUserExpressFee(params).then(res => {
+      if (res.result == 1) {
+        this.setState({
+          expressFee: res.data
+        });
+      }
+    });
+  };
+  /**
    * 切换地址 更新地址信息
    */
   _updateData = data => {
-    this.setState({
-      addr: data
-    });
+    this.setState(
+      {
+        addr: data,
+        address_id: data.addr_id
+      },
+      () => {
+        this._getExpressFee();
+      }
+    );
   };
   /**
    * 初始化获取地址信息
@@ -55,20 +84,26 @@ class OrderConfirm extends Component {
         });
         res.data.forEach(item => {
           if (item.def_addr == 1) {
-            this.setState({
-              addr: item
-            });
+            this.setState(
+              {
+                addr: item,
+                address_id: item.addr_id
+              },
+              () => {
+                this._getExpressFee();
+              }
+            );
           }
         });
       }
     });
   };
   componentDidMount() {
-    this._getData();
     const { params } = this.props.navigation.state;
     this.setState({
       goodsData: params
     });
+    this._getData();
   }
   /**
    * 展示地址
@@ -220,22 +255,122 @@ class OrderConfirm extends Component {
     );
   };
   /**
+   * 快递费
+   */
+  _expressFee = () => {
+    const { expressFee } = this.state;
+    return (
+      <View style={styles.panel}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderColor: "#eee",
+            borderBottomWidth: 1,
+            paddingVertical: scaleSize(5)
+          }}
+        >
+          <Text style={[styles.text, {}]}>快递费：</Text>
+          <Text style={[styles.text, {}]}>{`+${expressFee}元`}</Text>
+        </View>
+      </View>
+    );
+  };
+  /**
+   * 查看价格的花费
+   */
+  _viewedCost = () => {
+    const { viewed_cost } = this.state.goodsData;
+    return (
+      <View style={styles.panel}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderColor: "#eee",
+            borderBottomWidth: 1,
+            paddingVertical: scaleSize(5)
+          }}
+        >
+          <Text style={[styles.text, {}]}>抵扣查看价格花费：</Text>
+          <Text style={[styles.text, {}]}>{`-${viewed_cost}元`}</Text>
+        </View>
+      </View>
+    );
+  };
+  /**
+   * 预存款 之前查看价格积累的金额
+   */
+  _advance = () => {
+    const { advance } = this.props.userInfo;
+    const { goodsData, expressFee } = this.state;
+    return (
+      <View style={styles.panel}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            borderColor: "#eee",
+            borderBottomWidth: 1,
+            paddingVertical: scaleSize(5)
+          }}
+        >
+          <Text style={[styles.text, {}]}>{`可用预存款共计${advance}元`}</Text>
+          <TextInput
+            keyboardType="numeric"
+            placeholder={"使用多少"}
+            style={[
+              styles.text,
+              {
+                borderWidth: 1,
+                marginLeft: scaleSize(10),
+                borderColor: "#DDD"
+              }
+            ]}
+            onChangeText={advanceCount => {
+              const newText = advanceCount.replace(/[^\d]+/, "");
+              //   当前默认价格
+              const defaultCost =
+                goodsData.mktprice + expressFee - goodsData.viewed_cost;
+
+              // 当输入的值超过自己拥有的预存款
+              if (newText > advance) {
+                const newText2 = newText.replace(/[\d]+/, "");
+                this.setState({ advanceCount: newText2 });
+                return;
+              }
+              // 当输入的值超过自己目前商品的价格
+              if (newText > defaultCost) {
+                alert("超多最多抵扣限额");
+                const newText2 = newText.replace(/[\d]+/, "");
+                this.setState({ advanceCount: newText2 });
+                return;
+              }
+              this.setState({ advanceCount: newText });
+            }}
+            value={this.state.advanceCount}
+          />
+        </View>
+      </View>
+    );
+  };
+  /**
    * 提交订单
    */
   _submit = () => {
     const addrInfo = this.state.addr;
-    // console.warn("addrInfo::", addrInfo);
-    const { remark, goodsData } = this.state;
-    console.warn(":goodsData:", goodsData);
-    const { goods_id, product_id, mktprice, viewed_cost } = goodsData;
+    const { remark, goodsData, expressFee, advanceCount } = this.state;
+    const { navigation } = this.props;
+    const { goods_id, product_id, viewed_cost } = goodsData;
     const { member_id, province, city, region, addr, name, mobile } = addrInfo;
     const shipping_area = `${province}-${city}-${region}`;
     if (!name) {
       Alert.alert("未提交", "请添加地址");
     }
     const params = {
-      discount: viewed_cost,
-      //   viewed_cost,
+      discount: Number(viewed_cost) + Number(advanceCount),
       goods_id,
       member_id,
       product_id,
@@ -243,27 +378,50 @@ class OrderConfirm extends Component {
       ship_name: name,
       ship_addr: addr, // 收件具体地址
       ship_mobile: mobile,
-      shipping_amount: 14.0, // 快递价格
-      // discount, //折扣
+      shipping_amount: expressFee, // 快递价格
       remark // 备注
     };
     console.warn("params::", params);
+    // return null;
     Order.createOrder(params).then(res => {
       console.warn("res::", res);
       if (res.result == 1) {
-        alert("提交成功");
-        console.warn("res::", res);
+        //   更新预存款
+        this._updateAndvance();
+        navigation.navigate("OrderPay", {
+          price: res.data
+        });
       } else {
         alert("失败：" + res.message);
       }
     });
   };
-  render() {
-    const { goodsData } = this.state;
+  //   提交订单成功 需要更新预存款的信息
+  _updateAndvance = () => {
+    const { member_id, advance } = this.props.userInfo;
+    const { userInfo } = this.props;
 
+    const value = this.state.advanceCount;
+    const newAdvance = advance - value;
+    console.warn("newAdvance::", newAdvance);
+    const params = {
+      member_id,
+      value: -value
+    };
+    Order.updateAndvance(params).then(res => {
+      if (res.result == 1) {
+        const newUserInfo = { ...userInfo, advance: newAdvance };
+        this.props.dispatch(updateUserInfo(newUserInfo));
+        console.warn("预存款更新成功");
+      } else {
+        console.warn("预存款更新失败");
+      }
+    });
+  };
+  render() {
+    const { goodsData, expressFee, advanceCount } = this.state;
     const { navigation } = this.props;
     const { dataArr, addr } = this.state;
-
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -286,6 +444,9 @@ class OrderConfirm extends Component {
             {this._note()}
             {this._showTitle("", { paddingVertical: scaleSize(3) })}
             {this._coupon()}
+            {this._expressFee()}
+            {this._viewedCost()}
+            {this._advance()}
           </View>
         </ScrollView>
         <View
@@ -300,7 +461,11 @@ class OrderConfirm extends Component {
           <View style={{ flexDirection: "row" }}>
             <Text style={[styles.text, {}]}>合计：</Text>
             <Text style={[styles.text, { color: "#FA4D50" }]}>
-              ¥ {goodsData.mktprice}
+              ¥{" "}
+              {goodsData.mktprice +
+                expressFee -
+                goodsData.viewed_cost -
+                advanceCount}
             </Text>
           </View>
           <Text

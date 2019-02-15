@@ -142,7 +142,7 @@ export default class GoodsAuthor extends Component {
       <View style={styles.recGoodsDetail}>
         <FlatList
           data={data}
-          // keyExtractor={(item, index) => item.goodsId}
+          keyExtractor={(item, index) => item.goods_id}
           renderItem={this._renderItem}
           horizontal={true}
         />
@@ -256,7 +256,6 @@ export default class GoodsAuthor extends Component {
   render() {
     let { avatarUrl, avatarName, authorDescrip, note } = this.state.authorInfo;
     const { recommend } = this.props;
-    console.warn("recom2212men111d::", recommend);
 
     return (
       <View style={styles.container}>

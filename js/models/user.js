@@ -79,6 +79,17 @@ export default class User {
     });
   }
   /**
+   * 获取用户地址的快递费用
+   * @param {*} param
+   */
+  static getUserExpressFee(param) {
+    console.warn("parassssssssssssssssssssssm::", param);
+    return Fetch.fetchGet(UserApi.getUserExpressFee, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
+  /**
    * 删除用户地址
    * @param {*} param
    */

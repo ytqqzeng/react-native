@@ -131,7 +131,7 @@ export default class Kanke extends Component {
               style={{
                 marginLeft: scaleSize(5),
                 fontSize: setSpText2(12),
-                Color: "#888"
+                color: "#888"
               }}
             >
               1026
@@ -158,12 +158,12 @@ export default class Kanke extends Component {
           </View>
           <View
             style={{
-              //   paddingHorizontal: scaleSize(10),
               marginBottom: scaleSize(2),
               backgroundColor: "#fff"
             }}
           >
             <FlatList
+              keyExtractor={(item, index) => String(index)}
               data={this.state.videoArray}
               renderItem={this._renderItem}
               ItemSeparatorComponent={() => (

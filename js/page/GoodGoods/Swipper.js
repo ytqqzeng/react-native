@@ -27,7 +27,6 @@ export default class Swipper extends Component {
     this.slide1 = this.props.slide;
   }
   rederImage(data, key) {
-    // isShowText 是否显示文字
     const { navigation, isShowText, updateData } = this.props;
     let Imageurl = data.original;
     return (
@@ -88,9 +87,7 @@ const styles = StyleSheet.create({
     height: 300,
     justifyContent: "center",
     alignItems: "center"
-    // backgroundColor: "#333"
   },
-
   text: {
     position: "absolute",
     textAlign: "center",
@@ -101,7 +98,6 @@ const styles = StyleSheet.create({
     height: 30,
     color: "#fff",
     fontSize: 15
-    // backgroundColor: "rgba(0,0,0,.3)"
   },
   img: {
     flex: 1,

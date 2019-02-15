@@ -1,3 +1,4 @@
+// 详情页底部的操作条
 import React, { Component } from "react";
 import {
   StyleSheet,
@@ -9,7 +10,7 @@ import {
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 
-const { width } = Dimensions.get("window");
+// const { width } = Dimensions.get("window");
 
 /**
  *   页面最底部的操作栏

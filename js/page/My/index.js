@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  SectionList,
   Text,
   TouchableHighlight,
   View,
@@ -19,9 +18,7 @@ const ROOT_URL = `${env.apiHost}/`;
 
 import NavBar from "../../common/NavBar";
 import { connect } from "react-redux";
-import Goods from "../../models/goods";
-import StorageUtil, { StorageKey } from "../../models/StorageModel";
-import { asyncCheckPriceGoods } from "../../actions/goods";
+import { asyncCheckPriceGoods, asyncFavoriteGoods } from "../../actions/goods";
 let { width } = Dimensions.get("window");
 
 let navHeight = (Platform.OS === "ios" ? 20 : 0) + 45;
@@ -37,7 +34,6 @@ class MyPage extends Component {
       headTop: 0,
       userInfo: null,
       checkedGoods: [] // 已查看价格的商品
-      //   checkedGoodsImg: [] // 已查看价格的商品的图片
     };
   }
   onScroll = event => {
@@ -107,7 +103,6 @@ class MyPage extends Component {
   _renderBody = () => {
     const { navigation, goodsInfo } = this.props;
     // console.warn("goodsInfo::", goodsInfo);
-
     const images =
       goodsInfo.checkedPriceGoodsList.length > 3
         ? goodsInfo.checkedPriceGoodsList.slice(0, 3)
@@ -138,6 +133,7 @@ class MyPage extends Component {
                 {images.map(item => {
                   return (
                     <Image
+                      key={item}
                       source={{ uri: item }}
                       style={{
                         width: 30,
@@ -171,6 +167,7 @@ class MyPage extends Component {
                 {imagesFavorite.map(item => {
                   return (
                     <Image
+                      key={item}
                       source={{ uri: item }}
                       style={{
                         width: 30,
@@ -197,6 +194,7 @@ class MyPage extends Component {
   };
   _renderItem() {
     const { navigation } = this.props;
+    const { member_id } = this.props.userInfo;
     const data = [
       [
         {
@@ -218,10 +216,10 @@ class MyPage extends Component {
           navigate: "HelpCenter"
         },
         {
-          icon: require("../../../res/image/setting/icon_msg.png"),
-          title: "消息中心",
-          other: "仅需3秒,超值礼金等你额",
-          navigate: "HelpCenter"
+          icon: require("../../../res/image/setting/footprint.png"),
+          title: "浏览记录",
+          other: "",
+          navigate: "FootPrint"
         }
       ],
       [
@@ -266,7 +264,7 @@ class MyPage extends Component {
                 key={index}
                 underlayColor={"#DDD"}
                 onPress={() => {
-                  navigation.navigate(item.navigate, { name: "动态的" });
+                  navigation.navigate(item.navigate, { memberId: member_id });
                 }}
               >
                 <View style={styles.itemView}>
@@ -302,8 +300,9 @@ class MyPage extends Component {
   }
   componentDidMount() {
     const { uname } = this.props.userInfo;
-    const { goodsInfo, dispatch } = this.props;
+    const { dispatch } = this.props;
     dispatch(asyncCheckPriceGoods({ uname }));
+    dispatch(asyncFavoriteGoods({ uname }));
   }
 
   render() {
@@ -351,7 +350,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff"
-    // backgroundColor: "#FAB9B2",
   },
   btn: {
     margin: 5,
@@ -359,11 +357,9 @@ const styles = StyleSheet.create({
     padding: 2
   },
   headSection: {
-    // height: scaleSize(100),
     width: width,
     padding: scaleSize(30),
     backgroundColor: "#FAB9B2"
-    // paddingTop: 60
   },
   avatar: {
     flex: 1,

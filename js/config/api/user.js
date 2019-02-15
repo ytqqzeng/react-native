@@ -27,6 +27,11 @@ export const UserApi = {
     url: `${ROOT_URL}shop/api/shop/member-ext/get-address-list.do`,
     method: "GET"
   },
+  //   快递费
+  getUserExpressFee: {
+    url: `${ROOT_URL}shop/api/shop/order-ext/get-shipping-price.do`,
+    method: "GET"
+  },
   deleteUserAddress: {
     url: `${ROOT_URL}shop/api/shop/member-ext/delete-address.do`,
     method: "GET"

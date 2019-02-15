@@ -13,13 +13,17 @@ import Address from "../page/My/UserInfo/Address";
 import AddAddress from "../page/My/UserInfo/Address/Add";
 import EditAddress from "../page/My/UserInfo/Address/Edit";
 import HelpCenter from "../page/My/HelpCenter";
+import FootPrint from "../page/My/FootPrint";
 import HelpPage from "../page/My/HelpCenter/HelpPage";
 import GoodGoods from "../page/GoodGoods";
 import OrderConfirm from "../page/Order/OrderConfirm";
 import OrderPage from "../page/Order/OrderPage";
 import OrderType from "../page/Order/OrderType";
+import OrderPay from "../page/Order/OrderPay";
 import Kanke from "../page/Kanke";
 import KankeDetail from "../page/Kanke/KankeDetail";
+import FaqAsk from "../page/GoodsDetail/Faq/FaqAsk";
+import FaqDetail from "../page/GoodsDetail/Faq/FaqDetail";
 
 import SearchPage from "../common/Search";
 import Category from "../page/Category";
@@ -89,6 +93,10 @@ export default (AppNavigator = StackNavigator(
     OrderType: {
       screen: OrderType
     },
+    // 订单支付
+    OrderPay: {
+      screen: OrderPay
+    },
     // 分类
     Category: {
       screen: Category
@@ -100,6 +108,10 @@ export default (AppNavigator = StackNavigator(
     // 帮助中心
     HelpCenter: {
       screen: HelpCenter
+    },
+    // 我的足迹
+    FootPrint: {
+      screen: FootPrint
     },
     // 具体帮助页面
     HelpPage: {
@@ -123,9 +135,14 @@ export default (AppNavigator = StackNavigator(
     GoodsDetail: {
       screen: GoodsDetail
     },
-    // GoodItem:{
-    //     screen: GoodItem
-    // },
+    // 详情页问答区域 提问
+    FaqAsk: {
+      screen: FaqAsk
+    },
+    // 详情页问答区域
+    FaqDetail: {
+      screen: FaqDetail
+    },
     HomeIndex: {
       screen: HomeIndex
     },

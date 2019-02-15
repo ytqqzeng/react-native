@@ -66,7 +66,7 @@ class App extends Component {
         />
         <View style={{ paddingHorizontal: 20 }}>
           <FlatList
-            keyExtractor={item => item.cat_id}
+            keyExtractor={item => String(item.goods_id)}
             data={this.state.dataArray}
             renderItem={this._renderItemView}
           />

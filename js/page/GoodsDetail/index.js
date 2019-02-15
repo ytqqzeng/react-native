@@ -39,6 +39,8 @@ import SpecModal from "./Modal";
 import ScaledImage from "./ScaledImage";
 import { Label } from "../../common/Label";
 import SkuGoods from "./SkuGoods";
+import Faq from "./Faq";
+
 const { width } = Dimensions.get("window");
 
 const HEADER_MAX_HEIGHT = 450;
@@ -58,7 +60,8 @@ class GoodsDetail extends Component {
       viewHeight: 0, //webview的高度
       //   is_viewed_price: 0,
       goodDetail: {}, // 商品的全部信息
-      payment: 0 // 临时的 是否支付定金
+      payment: 0, // 临时的 是否支付定金
+      faq: [] // 商品问答的数据列表
     };
   }
   // 付定金
@@ -129,6 +132,8 @@ class GoodsDetail extends Component {
                 if (updateData) {
                   updateData();
                 }
+              } else {
+                console.warn("res.message::", res.message);
               }
             });
           }
@@ -142,8 +147,38 @@ class GoodsDetail extends Component {
       { cancelable: false }
     );
   };
+  // 商品问答数据列表。
+  _getFAQData = data => {
+    const { goods_id } = data;
+    console.warn("goods_id::", goods_id);
+    Goods.faqGoods({ goods_id }).then(res => {
+      if (res.result == 1) {
+        this.setState({
+          faq: res.data
+        });
+      }
+    });
+  };
+  /**
+   * 留下足迹
+   */
+  _footPrint = (member_id, data) => {
+    const { goods_id } = data;
+    const params = {
+      goods_id,
+      member_id
+    };
+    Goods.footPrint(params).then(res => {
+      if (res.result === 1) {
+        console.warn("留下足迹成功");
+      } else {
+        console.warn("res.message::", res.message);
+      }
+    });
+  };
   componentDidMount() {
     const { member_id } = this.props.userInfo;
+    console.warn("member_id::", member_id);
     const { params } = this.props.navigation.state;
     const goodIndex = params ? params.goodIndex : null;
     const type = params ? params.type : null;
@@ -153,6 +188,11 @@ class GoodsDetail extends Component {
         this.setState({
           goodDetail: res[goodIndex]
         });
+        return res[goodIndex];
+      })
+      .then(data => {
+        this._getFAQData(data);
+        this._footPrint(member_id, data);
       })
       .catch(err => console.warn("err::", err));
     // 详情页商品推荐
@@ -191,9 +231,8 @@ class GoodsDetail extends Component {
     return ImgUrlArr;
   };
   _goodDetail = () => {
-    const { goodDetail, viewHeight, recommend } = this.state;
+    const { goodDetail, viewHeight, recommend, faq } = this.state;
     const imgArr = this._utilImg(goodDetail.intro);
-
     const scrollY = Animated.add(
       this.state.scrollY,
       Platform.OS === "ios" ? HEADER_MAX_HEIGHT : 0
@@ -203,14 +242,12 @@ class GoodsDetail extends Component {
       outputRange: [0, -HEADER_MAX_HEIGHT],
       extrapolate: "clamp" // 阻止输出值超过outputRange
     });
-
     //图片跟随滚动，但是是滚动距离的一般
     const imageTranslate = scrollY.interpolate({
       inputRange: [0, HEADER_SCROLL_DISTANCE],
       outputRange: [0, HEADER_SCROLL_DISTANCE / 2],
       extrapolate: "clamp"
     });
-
     return (
       <View style={{ flex: 1 }}>
         <Animated.View
@@ -283,8 +320,8 @@ class GoodsDetail extends Component {
             </View>
             <View style={{ flex: 1 }}>
               {imgArr.length > 0
-                ? imgArr.map(item => {
-                    return <ScaledImage uri={item} width={width} />;
+                ? imgArr.map((item, index) => {
+                    return <ScaledImage key={index} uri={item} width={width} />;
                   })
                 : null}
             </View>
@@ -295,6 +332,11 @@ class GoodsDetail extends Component {
               navigation={this.props.navigation}
             />
           </View>
+          <Faq
+            data={faq}
+            goods_id={goodDetail.goods_id}
+            navigation={this.props.navigation}
+          />
           <ShoppingExplanation />
         </Animated.ScrollView>
       </View>
@@ -302,7 +344,6 @@ class GoodsDetail extends Component {
   };
   _changeFavorite = () => {
     const { params } = this.props.navigation.state;
-
     const updateData = params.updateData ? params.updateData : null;
     const { goodDetail } = this.state;
     const { is_favorite_goods, goods_id } = this.state.goodDetail;
@@ -338,7 +379,6 @@ class GoodsDetail extends Component {
     const { navigation } = this.props;
     const { goodDetail, payment } = this.state;
     const { name, original, goods_id, mktprice, viewed_cost } = goodDetail;
-    console.warn("goodDetail::", goodDetail);
     var a = { name, original, goods_id, mktprice, viewed_cost };
     const newData = { ...data, ...a };
     navigation.navigate("OrderConfirm", newData);
@@ -382,9 +422,7 @@ class GoodsDetail extends Component {
           leftButton={ViewUtils.getLeftButtonForGoodsDetail(() => {
             navigation.goBack();
           })}
-          rightButton={ViewUtils.getRightButtonForGoodsDetail(() => {
-            console.warn("222::", 222);
-          })}
+          rightButton={ViewUtils.getRightButtonForGoodsDetail(() => {})}
         />
 
         {goodDetail ? (

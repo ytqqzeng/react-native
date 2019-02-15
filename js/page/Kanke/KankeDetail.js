@@ -22,10 +22,7 @@ import {
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
-import Swipper from "./Swipper";
-import Video from "react-native-video";
-import videoUrl from "../../../res/pageImage/landing.mp4";
-const { width } = Dimensions.get("window");
+
 export default class KankeDetail extends Component {
   constructor(props) {
     super(props);
