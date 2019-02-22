@@ -398,6 +398,7 @@ class OrderConfirm extends Component {
     const shipping_area = `${province}-${city}-${region}`;
     if (!name) {
       Alert.alert("未提交", "请添加地址");
+      return;
     }
     const params = {
       discount: Number(viewed_cost) + Number(advanceCount),
@@ -411,43 +412,19 @@ class OrderConfirm extends Component {
       shipping_amount: expressFee, // 快递价格
       remark // 备注
     };
-    // console.warn("params::", params);
-    // return null;
+
     Order.createOrder(params).then(res => {
       console.warn("res::", res);
       if (res.result == 1) {
-        //   更新预存款
-        // this._updateAndvance();
         navigation.navigate("OrderPay", {
           price: res.data
         });
       } else {
-        alert("失败：" + res.message);
+        alert("提交订单失败");
       }
     });
   };
-  //   提交订单成功 需要更新预存款的信息
-  //   _updateAndvance = () => {
-  //     const { member_id, advance } = this.props.userInfo;
-  //     const { userInfo } = this.props;
 
-  //     const value = this.state.advanceCount;
-  //     const newAdvance = advance - value;
-  //     console.warn("newAdvance::", newAdvance);
-  //     const params = {
-  //       member_id,
-  //       value: -value
-  //     };
-  //     Order.updateAndvance(params).then(res => {
-  //       if (res.result == 1) {
-  //         const newUserInfo = { ...userInfo, advance: newAdvance };
-  //         this.props.dispatch(updateUserInfo(newUserInfo));
-  //         console.warn("预存款更新成功");
-  //       } else {
-  //         console.warn("预存款更新失败");
-  //       }
-  //     });
-  //   };
   render() {
     const {
       goodsData,
@@ -532,7 +509,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#777",
-    fontSize: setSpText2(12),
+    fontSize: setSpText2(13),
     paddingVertical: scaleSize(3)
   },
   panel: {

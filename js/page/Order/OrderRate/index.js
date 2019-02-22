@@ -19,6 +19,8 @@ import {
 import { scaleSize, setSpText2, scaleHeight } from "../../../util/screenUtil";
 import NavigationBar from "../../../common/NavigationBar";
 import ViewUtils from "../../../util/ViewUtils";
+import Toast, { DURATION } from "react-native-easy-toast";
+import Order from "../../../models/order";
 import StarScore from "./StarScore";
 import ImagePicker from "react-native-image-picker";
 var options = {
@@ -38,7 +40,7 @@ export default class OrderRate extends Component {
     super(props);
     this.state = {
       currentScore: 3,
-      text: "",
+      loading: true,
       imgDataArr: [],
       imgUriArr: []
     };
@@ -55,15 +57,27 @@ export default class OrderRate extends Component {
           height: scaleHeight(100),
           backgroundColor: "#EEE",
           fontSize: setSpText2(13),
-          textAlignVertical: "top"
+          textAlignVertical: "top",
+          paddingHorizontal: scaleSize(15)
         }}
-        onChangeText={text => this.setState({ text })}
-        value={this.state.text}
+        onChangeText={text => this.setState({ content: text })}
+        value={this.state.content}
         placeholder={"请输入评价的内容"}
         placeholderTextColor={"#DDD"}
         multiline={true}
       />
     );
+  };
+  _deleteImg = index => {
+    const { imgDataArr, imgUriArr } = this.state;
+    imgDataArr.splice(index, 1);
+    imgUriArr.splice(index, 1);
+    this.setState({
+      imgDataArr,
+      imgUriArr,
+      content: "",
+      grade: 3
+    });
   };
   //   晒图
   _takePhoto = () => {
@@ -76,7 +90,7 @@ export default class OrderRate extends Component {
           padding: scaleSize(15)
         }}
       >
-        {imgDataArr.map(item => {
+        {imgDataArr.map((item, index) => {
           return (
             <View>
               <Image
@@ -98,14 +112,15 @@ export default class OrderRate extends Component {
                   zIndex: 10
                 }}
                 onPress={() => {
-                  alert(4);
+                  this._deleteImg(index);
                 }}
               >
                 <Image
-                  source={{ uri: "data:image/jpeg;base64," + item }}
+                  source={require("../../../../res/image/cancel.png")}
                   style={{
-                    width: scaleSize(10),
-                    height: scaleSize(10)
+                    width: scaleSize(25),
+                    height: scaleSize(25),
+                    tintColor: "#999"
                   }}
                   resizeMode={"cover"}
                 />
@@ -114,22 +129,16 @@ export default class OrderRate extends Component {
           );
         })}
 
-        {/* {avatar2 ? (
-          <Image
-            source={require(avatar2)}
-            style={{ width: scaleSize(44), height: scaleSize(32) }}
-          />
-        ) : null} */}
-
         <TouchableOpacity
           onPress={() => {
+            //   规定只能上传一张图片
+            if (imgUriArr.length > 0) return;
             ImagePicker.showImagePicker(options, response => {
               if (response.error) {
                 alert("系统异常，请稍后再试");
               } else if (response.didCancel) {
                 console.log("User cancelled image picker");
               } else {
-                console.warn("response::", response);
                 imgDataArr.push(response.data);
                 imgUriArr.push(response.uri);
                 this.setState({
@@ -156,6 +165,27 @@ export default class OrderRate extends Component {
       </View>
     );
   };
+  _submit = param => {
+    const { currentScore, content, imgUriArr } = this.state;
+    const params = {
+      ...param,
+      content,
+      grade: currentScore,
+      img: imgUriArr.join()
+    };
+    if (content) {
+      this.refs.toast.show("提交中~", 10000);
+      Order.rateOrder(params).then(res => {
+        this.refs.toast.close();
+        if (res.result === 1) {
+        } else {
+          alert("失败:", res.message);
+        }
+      });
+    } else {
+      this.refs.toast.show("至少输入一个字哦~!", 800);
+    }
+  };
   render() {
     const { navigation } = this.props;
     const { _img, member_id, _goods_id } = navigation.state.params;
@@ -169,7 +199,7 @@ export default class OrderRate extends Component {
             navigation.goBack(null);
           })}
           rightButton={ViewUtils.getSubmitButton("提交", () => {
-            alert("未完成");
+            this._submit({ member_id, goods_id: _goods_id });
           })}
         />
         <View style={{}}>
@@ -195,13 +225,13 @@ export default class OrderRate extends Component {
             </View>
           </View>
           {this._rateWords()}
+          <Toast ref="toast" position="center" opacity={0.8} />
           {this._takePhoto()}
         </View>
       </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -40,12 +40,12 @@ class App extends Component {
     const { params } = this.props.navigation.state;
     const cat_id = params ? params.cat_id : null;
     const { member_id } = this.props.userInfo;
-    Goods.goodCategoryGoodsList({ cat_id: cat_id, member_id }).then(res => {
+    Goods.goodCategoryGoodsList({ cat_id, member_id }).then(res => {
       this.setState({
         dataArray: res.data
       });
 
-      StorageUtil.SetStorage(StorageKey.catagoryGoods, newHistory);
+      StorageUtil.SetStorage(StorageKey.catagoryGoods, res.data);
     });
   };
   componentDidMount() {

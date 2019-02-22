@@ -30,7 +30,7 @@ export default class GoodsCell extends Component {
       updateData,
       isCheckedPriceGoods
     } = this.props;
-    // console.warn("item::", item);
+
     var is_viewed_price = item.is_viewed_price;
     // 个人中心 已查看价格的商品列表数据里面没有返回is_viewed_price 所以做此判断
     if (isCheckedPriceGoods) {

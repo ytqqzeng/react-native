@@ -482,21 +482,23 @@ class GoodsDetail extends Component {
             <Text style={{ padding: 5 }}>加入购物车</Text>
           </View> */}
         </View>
-        <HandleBar
-          goodDetail={goodDetail}
-          payment={payment}
-          showPrice={this.showPrice}
-          paymented={this.paymented}
-          clickBtn={() => {
-            if (!goodDetail.is_viewed_price) {
-              Alert.alert("提示", "需要先查看价格");
-              return;
-            }
-            this.setState({
-              specVisible: true
-            });
-          }}
-        />
+        {goodDetail.market_enable ? (
+          <HandleBar
+            goodDetail={goodDetail}
+            payment={payment}
+            showPrice={this.showPrice}
+            paymented={this.paymented}
+            clickBtn={() => {
+              if (!goodDetail.is_viewed_price) {
+                Alert.alert("提示", "需要先查看价格");
+                return;
+              }
+              this.setState({
+                specVisible: true
+              });
+            }}
+          />
+        ) : null}
 
         <SpecModal
           visible={this.state.specVisible}

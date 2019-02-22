@@ -15,6 +15,10 @@ export const OrderApi = {
     url: `${ROOT_URL}shop/api/shop/order-ext/delete-order.do`,
     method: "POST"
   },
+  rateOrder: {
+    url: `${ROOT_URL}shop/api/shop/goods-ext/add-comment.do`,
+    method: "POST"
+  },
   OrderList: {
     url: `${ROOT_URL}shop/api/shop/order-ext/get-order-by-member-id.do`,
     method: "GET"

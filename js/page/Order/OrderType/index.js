@@ -308,7 +308,8 @@ class OrderType extends Component {
 
           <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
             {this._deleteOrderBtn(status, order_id)}
-            {status === 1 ? this._rateOrderBtn(items_json, goods) : null}
+            {status === 7 ? this._rateOrderBtn(items_json, goods) : null}
+            {/* {this._rateOrderBtn(items_json, goods)} */}
           </View>
         </View>
       </View>

@@ -156,6 +156,7 @@ class AddAddress extends Component {
             style={styles.textInput1}
             value={this.state.mobile}
             placeholder={"手机:"}
+            keyboardType={"phone-pad"}
             onChangeText={e => {
               this.setState({
                 mobile: e

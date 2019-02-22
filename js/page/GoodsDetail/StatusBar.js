@@ -10,7 +10,7 @@ export default class StatusBar extends Component {
   // 已付定金
   state = {
     fadeInOpacity: new Animated.Value(0), // 初始值
-    viewNum: 2121
+    viewNum: 0
   };
   _fadeInOpacity = () => {
     Animated.timing(this.state.fadeInOpacity, {
@@ -58,9 +58,8 @@ export default class StatusBar extends Component {
     );
   };
   render() {
-    const { viewNum } = this.state;
     const { payment } = this.props;
-    const { is_viewed_price, end_time } = this.props.goodDetail;
+    const { is_viewed_price, end_time, view_count } = this.props.goodDetail;
     let isPayment = payment ? this.paymented() : this.checked(is_viewed_price);
     return (
       <View style={styles.statusbar}>
@@ -72,13 +71,13 @@ export default class StatusBar extends Component {
               height: scaleSize(18)
             }}
           />
-          <Text style={styles.text}>{viewNum}</Text>
+          <Text style={styles.text}>{view_count}</Text>
         </View>
         <View style={styles.endTime}>
           <CountDown
             //date={new Date(parseInt(endTime))}
             date={end_time}
-            days={{ plural: "Days ", singular: "day " }}
+            days={{ plural: "天 ", singular: "天 " }}
             hours=":"
             mins=":"
             segs=""

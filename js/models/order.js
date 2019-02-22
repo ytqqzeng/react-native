@@ -35,6 +35,7 @@ export default class Order {
     remark // 备注
   }) {
     let formdata = new FormData();
+
     formdata.append("goods_id", goods_id);
     formdata.append("member_id", member_id);
     if (product_id) {
@@ -47,12 +48,13 @@ export default class Order {
     formdata.append("shipping_amount", shipping_amount);
     formdata.append("discount", discount);
     formdata.append("remark", remark);
-
+    // console.warn("formdata::", formdata);
     return fetch(OrderApi.createOrder.url, {
       method: "POST",
       body: formdata
     })
       .then(function(response) {
+        console.warn("response::", response);
         return response.json();
       })
       .catch(e => {
@@ -102,6 +104,31 @@ export default class Order {
       .catch(e => {
         console.warn("e::", e);
         console.warn("出错");
+      });
+  }
+  /**
+   * 评价订单
+   * @param {*} param
+   */
+  static rateOrder({ member_id, content, grade, img, goods_id }) {
+    let formdata = new FormData();
+    formdata.append("member_id", member_id);
+    formdata.append("content", content);
+    formdata.append("grade", grade);
+    formdata.append("img", img);
+    formdata.append("goods_id", goods_id);
+    return fetch(OrderApi.rateOrder.url, {
+      method: "POST",
+      body: formdata
+    })
+      .then(function(response) {
+        console.warn("response::", response);
+        return response.json();
+      })
+      .catch(e => {
+        console.warn("e::", e);
+        console.warn("出错");
+        return null;
       });
   }
 }
