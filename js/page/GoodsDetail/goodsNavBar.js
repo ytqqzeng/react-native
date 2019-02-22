@@ -62,9 +62,6 @@ export default class GoodsNavBar extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // backgroundColor: "rgba(0,0,0,0.3)"
-  },
   navBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -78,10 +75,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "absolute",
-
-    left: 40,
+    left: 80,
     top: 0,
-    right: 40,
+    right: 80,
     bottom: 0
   },
   title: {

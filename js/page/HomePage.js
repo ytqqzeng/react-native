@@ -89,13 +89,13 @@ export default class HomePage extends Component {
             renderIcon={() => (
               <Image
                 style={[styles.image]}
-                source={require("../../res/image/look.png")}
+                source={require("../../res/image/look2.png")}
               />
             )}
             renderSelectedIcon={() => (
               <Image
                 style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/look.png")}
+                source={require("../../res/image/look2.png")}
               />
             )}
             onPress={() => this.setState({ selectedTab: "tb_kanke" })}

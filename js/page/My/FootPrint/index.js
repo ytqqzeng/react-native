@@ -13,6 +13,8 @@ import {
   Image,
   Text,
   View,
+  TouchableOpacity,
+  ActivityIndicator,
   SectionList
 } from "react-native";
 import dayjs from "dayjs";
@@ -50,22 +52,76 @@ export default class FootPrint extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataArray: []
+      dataArray: [],
+      loading: true
     };
   }
-
   componentDidMount() {
     const { params } = this.props.navigation.state;
     const { memberId } = params;
     Goods.footPrintList({ member_id: memberId }).then(res => {
-      this.setState({
-        dataArray: res.data
-      });
+      if (res.result === 1) {
+        this.setState({
+          dataArray: res.data,
+          loading: false
+        });
+      }
     });
   }
+  _renderItem = (item, index) => {
+    const { navigation } = this.props;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("GoodsDetail", {
+            isFootPrint: true,
+            detailData: item
+          });
+        }}
+        key={index}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          paddingHorizontal: scaleSize(10),
+          paddingVertical: scaleSize(10)
+        }}
+      >
+        <Image
+          source={{ uri: item.original }}
+          style={{ width: scaleSize(90), height: scaleSize(90) }}
+        />
+        <View
+          style={{
+            flex: 1,
+            height: scaleSize(90),
+            justifyContent: "center",
+            marginHorizontal: scaleSize(10),
+            borderBottomWidth: 1,
+            borderColor: "#ddd"
+          }}
+        >
+          <Text
+            numberOfLines={2}
+            style={{ fontSize: setSpText2(13), marginBottom: scaleSize(5) }}
+          >
+            {item.name}
+          </Text>
+          {item.is_viewed_price ? (
+            <Text style={{ fontSize: setSpText2(13), color: "#FC6969" }}>{`¥${
+              item.mktprice
+            }`}</Text>
+          ) : (
+            <Text
+              style={{ fontSize: setSpText2(13), color: "#FC6969" }}
+            >{`¥ ?元`}</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
   render() {
     const { navigation } = this.props;
-    const { dataArray } = this.state;
+    const { dataArray, loading } = this.state;
     // 给获取的元数据添加一个日期属性 用于后面日期归类
     let fixData = dataArray.map(item => {
       tmpDate = dayjs(item.view_time)
@@ -85,18 +141,20 @@ export default class FootPrint extends Component {
             navigation.goBack();
           })}
         />
-
-        <SectionList
-          renderItem={({ item, index, section }) => {
-            console.warn("item::", item);
-            return <Text key={index}>{item.name}</Text>;
-          }}
-          renderSectionHeader={({ section: { title } }) => {
-            return <Text style={{ fontWeight: "bold" }}>{title}</Text>;
-          }}
-          sections={ArrayData}
-          //   keyExtractor={(item, index) => item + index}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#FC6969" />
+        ) : (
+          <SectionList
+            renderItem={({ item, index, section }) => {
+              return this._renderItem(item, index);
+            }}
+            renderSectionHeader={({ section: { title } }) => {
+              return <Text style={styles.title}>{title}</Text>;
+            }}
+            sections={ArrayData}
+            keyExtractor={(item, index) => String(item.goods_id)}
+          />
+        )}
       </View>
     );
   }
@@ -107,16 +165,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5FCFF"
   },
-  page1: {
-    flex: 1,
-    backgroundColor: "red"
-  },
-  page2: {
-    flex: 1,
-    backgroundColor: "green"
-  },
-  image: {
-    height: 22,
-    width: 22
+  title: {
+    fontSize: setSpText2(12),
+    color: "#999",
+    paddingVertical: scaleSize(3),
+    marginLeft: scaleSize(10),
+    borderBottomWidth: 1,
+    borderColor: "#ddd"
   }
 });

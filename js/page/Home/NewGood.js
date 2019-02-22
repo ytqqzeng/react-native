@@ -25,7 +25,7 @@ import GoodItem from "./GoodItem";
 import ThemeRecommend from "./ThemeRecommend";
 
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
-import StorageUtil from "../../models/StorageModel";
+import StorageUtil, { StorageKey } from "../../models/StorageModel";
 import { connect } from "react-redux";
 class NewGood extends Component {
   constructor(props) {
@@ -40,10 +40,6 @@ class NewGood extends Component {
     this.navigation = this.props.navigation;
   }
 
-  //   componentWillMount() {
-  //     const { params } = this.navigation.state;
-  //     console.warn("params::", params);
-  //   }
   goodItems(data, index) {
     return (
       <GoodItem
@@ -64,16 +60,17 @@ class NewGood extends Component {
         this.setState({
           swipperArray: res.data
         });
-        StorageUtil.setSwipperGoods(res.data);
+
+        StorageUtil.SetStorage(StorageKey.swipperGoods, res.data);
       }
     });
     // 新品的数据
-    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           newGoodsDate: res.data
         });
-        StorageUtil.setNewGoods(res.data);
+        StorageUtil.SetStorage(StorageKey.newGoods, res.data);
       }
     });
     // 你的风格 商品
@@ -82,7 +79,7 @@ class NewGood extends Component {
         this.setState({
           styleGoodsDate: res.data
         });
-        StorageUtil.setStyleGoods(res.data);
+        StorageUtil.SetStorage(StorageKey.styleGoods, res.data);
       }
     });
     // 主题 推荐
@@ -92,7 +89,7 @@ class NewGood extends Component {
         this.setState({
           themeGoodsDate: data
         });
-        StorageUtil.setThemeGoods(data);
+        StorageUtil.SetStorage(StorageKey.themeGoods, res.data);
       }
     });
   };
@@ -167,7 +164,7 @@ class NewGood extends Component {
                         navigation.navigate("GoodsDetail", {
                           goodIndex: index,
                           title: item.name,
-                          type: "STYLE_GOODS",
+                          type: StorageKey.styleGoods,
                           updateData: this._updateData
                         });
                       }}

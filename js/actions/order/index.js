@@ -14,7 +14,6 @@ export const asyncUserOrderList = ({ member_id }) => {
   return dispatch => {
     Order.OrderList({ member_id }).then(res => {
       if (res.result == 1) {
-        console.warn("res.data 订单数据::", res.data);
         dispatch(userOrderList(res.data));
       }
     });

@@ -17,6 +17,8 @@ import {
   View
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../util/screenUtil";
+
+import StorageUtil, { StorageKey } from "../models/StorageModel";
 import Swiper from "react-native-swiper";
 const WindowWidth = Dimensions.get("window").width;
 
@@ -37,7 +39,7 @@ export default class Swipper extends Component {
           navigation.navigate("GoodsDetail", {
             goodIndex: key,
             title: data.name,
-            type: "SWIPPER_GOODS",
+            type: StorageKey.swipperGoods,
             updateData: updateData
           });
         }}

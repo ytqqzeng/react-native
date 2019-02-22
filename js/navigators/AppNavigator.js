@@ -16,10 +16,14 @@ import HelpCenter from "../page/My/HelpCenter";
 import FootPrint from "../page/My/FootPrint";
 import HelpPage from "../page/My/HelpCenter/HelpPage";
 import GoodGoods from "../page/GoodGoods";
+import MyHeartList from "../page/GoodGoods/MyHeartList";
+import GoodGoodsList from "../page/GoodGoods/GoodGoodsList";
 import OrderConfirm from "../page/Order/OrderConfirm";
 import OrderPage from "../page/Order/OrderPage";
 import OrderType from "../page/Order/OrderType";
 import OrderPay from "../page/Order/OrderPay";
+import OrderPayed from "../page/Order/OrderPayed";
+import OrderRate from "../page/Order/OrderRate";
 import Kanke from "../page/Kanke";
 import KankeDetail from "../page/Kanke/KankeDetail";
 import FaqAsk from "../page/GoodsDetail/Faq/FaqAsk";
@@ -48,6 +52,14 @@ export default (AppNavigator = StackNavigator(
     // 好物
     GoodGoods: {
       screen: GoodGoods
+    },
+    // 心动清单
+    MyHeartList: {
+      screen: MyHeartList
+    },
+    // 好物清单
+    GoodGoodsList: {
+      screen: GoodGoodsList
     },
     // 推荐
     RecommendGood: {
@@ -96,6 +108,14 @@ export default (AppNavigator = StackNavigator(
     // 订单支付
     OrderPay: {
       screen: OrderPay
+    },
+    // 订单支付成功
+    OrderPayed: {
+      screen: OrderPayed
+    },
+    // 订单评价
+    OrderRate: {
+      screen: OrderRate
     },
     // 分类
     Category: {

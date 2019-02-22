@@ -17,6 +17,8 @@ import {
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import Avartar from "../../common/avatar";
+import { Header } from "../../common/Header";
+import { StorageKey } from "../../models/StorageModel";
 
 /**
  * 商品推荐人的板块信息
@@ -68,50 +70,7 @@ export default class GoodsAuthor extends Component {
       isFollow: !this.state.isFollow
     });
   };
-  // 关注
-  _follow = follow => {
-    return (
-      <View style={styles.follow}>
-        <Text style={{ fontSize: 18 }}>关注</Text>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={{ justifyContent: "center" }}
-          onPress={() => {
-            this._switchFollowState();
-          }}
-        >
-          <Image
-            style={{
-              width: 20,
-              height: 18,
-              tintColor: "red",
-              marginLeft: 5,
-              marginRight: 5
-            }}
-            source={follow}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  // 推荐的头部
-  _recommend = avatarName => {
-    return (
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <Image
-          style={styles.recArrow}
-          source={require("../../../res/image/icon_left_arrow.png")}
-        />
-        <Text style={{ fontSize: 18, color: "#000" }}>
-          {avatarName + "的推荐"}
-        </Text>
-        <Image
-          style={styles.recArrow}
-          source={require("../../../res/image/icon_right_arrow.png")}
-        />
-      </View>
-    );
-  };
+
   // 推荐商品的单条信息
   _renderItem = ({ item, index }) => {
     const { navigation } = this.props;
@@ -120,11 +79,10 @@ export default class GoodsAuthor extends Component {
         style={styles.renderItem}
         activeOpacity={1}
         onPress={() => {
-          // alert(`商品的id是${item.goodsId}`)
           navigation.navigate("GoodsDetail", {
             goodIndex: index,
             title: item.name,
-            type: "AUTHOR_GOODS"
+            type: StorageKey.authorGoods
           });
         }}
       >
@@ -150,41 +108,10 @@ export default class GoodsAuthor extends Component {
     );
   };
   // 留言
-  _noteTitle = avatarName => {
+  _noteTitle = () => {
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          marginTop: scaleSize(10),
-          alignItems: "center"
-        }}
-      >
-        <Image
-          style={styles.recArrow2}
-          source={require("../../../res/pageImage/icon_left_arrow.png")}
-        />
-        <Image
-          style={styles.recArrow2}
-          source={require("../../../res/pageImage/icon_left_arrow.png")}
-        />
-        <Image
-          style={styles.recArrow2}
-          source={require("../../../res/pageImage/icon_left_arrow.png")}
-        />
-        <Text style={styles.noteTitle}>{`评价留言`}</Text>
-        <Image
-          style={styles.recArrow2}
-          source={require("../../../res/pageImage/icon_right_arrow.png")}
-        />
-        <Image
-          style={styles.recArrow2}
-          source={require("../../../res/pageImage/icon_right_arrow.png")}
-        />
-        <Image
-          style={styles.recArrow2}
-          source={require("../../../res/pageImage/icon_right_arrow.png")}
-        />
+      <View style={{ marginTop: 20 }}>
+        <Header title={"商品评价"} />
       </View>
     );
   };
@@ -259,21 +186,7 @@ export default class GoodsAuthor extends Component {
 
     return (
       <View style={styles.container}>
-        {/* <View style={styles.avartarWrapper}>
-          <Avartar
-            avatarName={avatarName}
-            avatarUrl={avatarUrl}
-            size={{ width: 40, height: 40 }}
-          />
-        </View>
-        <Text style={{ fontSize: 17, color: "#666", textAlign: "center" }}>
-          {authorDescrip}
-        </Text>
-        <View style={{ marginTop: 10, marginBottom: 10 }} /> */}
-        {/* {this._follow(follow)} */}
-        {/* {this._recommend(avatarName)} */}
-
-        {this._noteTitle(avatarName)}
+        {this._noteTitle()}
         {this._notes(note)}
         {this._moreNote()}
         {this._recommendDetail(recommend)}
@@ -284,7 +197,7 @@ export default class GoodsAuthor extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "#FFF"
   },
   avartarWrapper: {
     flexDirection: "row",
@@ -306,11 +219,7 @@ const styles = StyleSheet.create({
     top: 3,
     marginHorizontal: 10
   },
-  recArrow2: {
-    width: 20,
-    height: 20,
-    marginHorizontal: 7
-  },
+
   recGoodsDetail: {
     width: "100%",
     flexDirection: "row",
@@ -325,16 +234,7 @@ const styles = StyleSheet.create({
     paddingVertical: scaleSize(15),
     backgroundColor: "#ddd"
   },
-  noteTitle: {
-    fontSize: setSpText2(14),
-    color: "#fff",
-    backgroundColor: "#222",
-    paddingHorizontal: scaleSize(40),
-    paddingVertical: scaleSize(4),
-    borderColor: "#999",
-    borderWidth: 2,
-    borderRadius: 2
-  },
+
   notes: {
     flex: 1
   },

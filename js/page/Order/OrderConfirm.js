@@ -33,27 +33,34 @@ class OrderConfirm extends Component {
       dataArr: [],
       addr: {}, // 一条地址信息
       address_id: 0, // 地址ID
-      expressFee: 0, //快递费
+      expressFee: 0, //快递费,
+      viewed_cost: 0, // 查看价格
+      advance: 0, // 预存款
       remark: "", //备注
       advanceCount: 0, // 使用多少之前的预存款
       goodsData: [] // 商品数据
     };
   }
   /**
-   * 获取快递费用
+   * 获取订单相关费用
    */
-  _getExpressFee = () => {
+  _getOrderFee = () => {
+    const { member_id } = this.props.userInfo;
     const { address_id, goodsData } = this.state;
     const { goods_id } = goodsData;
     const params = {
+      member_id,
       address_id,
       goods_id
     };
 
-    User.getUserExpressFee(params).then(res => {
+    User.getUserOrderFee(params).then(res => {
       if (res.result == 1) {
+        console.warn("res::", res);
         this.setState({
-          expressFee: res.data
+          expressFee: res.data.ship_price,
+          viewed_cost: res.data.viewed_cost,
+          advance: res.data.advance
         });
       }
     });
@@ -68,7 +75,7 @@ class OrderConfirm extends Component {
         address_id: data.addr_id
       },
       () => {
-        this._getExpressFee();
+        this._getOrderFee();
       }
     );
   };
@@ -90,16 +97,18 @@ class OrderConfirm extends Component {
                 address_id: item.addr_id
               },
               () => {
-                this._getExpressFee();
+                this._getOrderFee();
               }
             );
           }
         });
       }
     });
+    // User
   };
   componentDidMount() {
     const { params } = this.props.navigation.state;
+    console.warn("this.props.navigation::", this.props.navigation);
     this.setState({
       goodsData: params
     });
@@ -198,8 +207,24 @@ class OrderConfirm extends Component {
           </View>
           <Text style={[styles.text, { color: "#FA4D50" }]}>¥ {mktprice}</Text>
           <View style={{ flexDirection: "row" }}>
-            <Label title={"正品保证"} style={{ marginRight: 10 }} />
-            <Label title={"现货"} />
+            <Label
+              title={"正品保证"}
+              style={{
+                marginRight: 10,
+                borderWidth: 1,
+                borderColor: "#FC6969",
+                borderRadius: 3
+              }}
+            />
+            <Label
+              title={"现货"}
+              style={{
+                marginRight: 10,
+                borderWidth: 1,
+                borderColor: "#FC6969",
+                borderRadius: 3
+              }}
+            />
           </View>
         </View>
       </View>
@@ -281,7 +306,7 @@ class OrderConfirm extends Component {
    * 查看价格的花费
    */
   _viewedCost = () => {
-    const { viewed_cost } = this.state.goodsData;
+    const { viewed_cost } = this.state;
     return (
       <View style={styles.panel}>
         <View
@@ -304,8 +329,8 @@ class OrderConfirm extends Component {
    * 预存款 之前查看价格积累的金额
    */
   _advance = () => {
-    const { advance } = this.props.userInfo;
-    const { goodsData, expressFee } = this.state;
+    const { advance } = this.state;
+    const { goodsData, expressFee, viewed_cost } = this.state;
     return (
       <View style={styles.panel}>
         <View
@@ -332,8 +357,7 @@ class OrderConfirm extends Component {
             onChangeText={advanceCount => {
               const newText = advanceCount.replace(/[^\d]+/, "");
               //   当前默认价格
-              const defaultCost =
-                goodsData.mktprice + expressFee - goodsData.viewed_cost;
+              const defaultCost = goodsData.mktprice + expressFee - viewed_cost;
 
               // 当输入的值超过自己拥有的预存款
               if (newText > advance) {
@@ -361,9 +385,15 @@ class OrderConfirm extends Component {
    */
   _submit = () => {
     const addrInfo = this.state.addr;
-    const { remark, goodsData, expressFee, advanceCount } = this.state;
+    const {
+      remark,
+      goodsData,
+      expressFee,
+      advanceCount,
+      viewed_cost
+    } = this.state;
     const { navigation } = this.props;
-    const { goods_id, product_id, viewed_cost } = goodsData;
+    const { goods_id, product_id } = goodsData;
     const { member_id, province, city, region, addr, name, mobile } = addrInfo;
     const shipping_area = `${province}-${city}-${region}`;
     if (!name) {
@@ -381,13 +411,13 @@ class OrderConfirm extends Component {
       shipping_amount: expressFee, // 快递价格
       remark // 备注
     };
-    console.warn("params::", params);
+    // console.warn("params::", params);
     // return null;
     Order.createOrder(params).then(res => {
       console.warn("res::", res);
       if (res.result == 1) {
         //   更新预存款
-        this._updateAndvance();
+        // this._updateAndvance();
         navigation.navigate("OrderPay", {
           price: res.data
         });
@@ -397,31 +427,37 @@ class OrderConfirm extends Component {
     });
   };
   //   提交订单成功 需要更新预存款的信息
-  _updateAndvance = () => {
-    const { member_id, advance } = this.props.userInfo;
-    const { userInfo } = this.props;
+  //   _updateAndvance = () => {
+  //     const { member_id, advance } = this.props.userInfo;
+  //     const { userInfo } = this.props;
 
-    const value = this.state.advanceCount;
-    const newAdvance = advance - value;
-    console.warn("newAdvance::", newAdvance);
-    const params = {
-      member_id,
-      value: -value
-    };
-    Order.updateAndvance(params).then(res => {
-      if (res.result == 1) {
-        const newUserInfo = { ...userInfo, advance: newAdvance };
-        this.props.dispatch(updateUserInfo(newUserInfo));
-        console.warn("预存款更新成功");
-      } else {
-        console.warn("预存款更新失败");
-      }
-    });
-  };
+  //     const value = this.state.advanceCount;
+  //     const newAdvance = advance - value;
+  //     console.warn("newAdvance::", newAdvance);
+  //     const params = {
+  //       member_id,
+  //       value: -value
+  //     };
+  //     Order.updateAndvance(params).then(res => {
+  //       if (res.result == 1) {
+  //         const newUserInfo = { ...userInfo, advance: newAdvance };
+  //         this.props.dispatch(updateUserInfo(newUserInfo));
+  //         console.warn("预存款更新成功");
+  //       } else {
+  //         console.warn("预存款更新失败");
+  //       }
+  //     });
+  //   };
   render() {
-    const { goodsData, expressFee, advanceCount } = this.state;
+    const {
+      goodsData,
+      expressFee,
+      advanceCount,
+      addr,
+      viewed_cost
+    } = this.state;
     const { navigation } = this.props;
-    const { dataArr, addr } = this.state;
+
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -461,11 +497,7 @@ class OrderConfirm extends Component {
           <View style={{ flexDirection: "row" }}>
             <Text style={[styles.text, {}]}>合计：</Text>
             <Text style={[styles.text, { color: "#FA4D50" }]}>
-              ¥{" "}
-              {goodsData.mktprice +
-                expressFee -
-                goodsData.viewed_cost -
-                advanceCount}
+              ¥ {goodsData.mktprice + expressFee - viewed_cost - advanceCount}
             </Text>
           </View>
           <Text

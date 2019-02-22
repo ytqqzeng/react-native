@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import NavigationBar from "../../../common/NavigationBar";
 import ViewUtils from "../../../util/ViewUtils";
 import GoodsCell from "../../../common/GoodsCell";
@@ -20,7 +20,8 @@ class FavoriteGoods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataArray: []
+      dataArray: [],
+      loading: true
     };
   }
   _renderItemView = ({ item, index }) => {
@@ -39,10 +40,10 @@ class FavoriteGoods extends Component {
   _updateData = () => {
     const { uname } = this.props.userInfo;
     Goods.favoriteGoodsList({ uname }).then(res => {
-      console.warn("res.data::", res.data);
       if (res.result == 1) {
         this.setState({
-          dataArray: res.data
+          dataArray: res.data,
+          loading: false
         });
       }
     });
@@ -64,10 +65,14 @@ class FavoriteGoods extends Component {
           })}
         />
         <View style={{ paddingHorizontal: 20, marginBottom: 100 }}>
-          <FlatList
-            data={this.state.dataArray}
-            renderItem={this._renderItemView}
-          />
+          {this.state.loading ? (
+            <ActivityIndicator size="large" color="#FC6969" />
+          ) : (
+            <FlatList
+              data={this.state.dataArray}
+              renderItem={this._renderItemView}
+            />
+          )}
         </View>
       </View>
     );
@@ -83,9 +88,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5FCFF"
-  },
-  image: {
-    height: 22,
-    width: 22
   }
 });

@@ -16,7 +16,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
-
+import { Header } from "../../../common/Header";
 /**
  * 常见问的解答
  */
@@ -71,7 +71,7 @@ export default class Faq extends Component {
                   <Text style={styles.ask}>问</Text>
                 </View>
                 <Text style={styles.text2} numberOfLines={1}>
-                  {item}
+                  {item.replace("&nbsp;", " ")}
                 </Text>
               </View>
             );
@@ -102,25 +102,27 @@ export default class Faq extends Component {
   render() {
     const { navigation, goods_id, data } = this.props;
     return (
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => {
-          navigation.navigate("FaqDetail", { data, goods_id });
-        }}
-      >
-        {this.FaqHeader(data)}
-        {this.FaqBody(data)}
-      </TouchableOpacity>
+      <View style={{ backgroundColor: "#fff", paddingTop: 15 }}>
+        <Header title={"问答区域"} />
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => {
+            navigation.navigate("FaqDetail", { data, goods_id });
+          }}
+        >
+          {this.FaqHeader(data)}
+          {this.FaqBody(data)}
+        </TouchableOpacity>
+      </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5FCFF",
     paddingHorizontal: scaleSize(15),
-
+    backgroundColor: "#fff",
     paddingVertical: scaleSize(5),
     overflow: "hidden"
   },

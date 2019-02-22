@@ -1,4 +1,4 @@
-/**分类详细商品列表
+/**好物列表
  * Sample React Native App
  * https://github.com/facebook/react-native
  *
@@ -12,12 +12,11 @@ import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
 import GoodsCell from "../../common/GoodsCell";
 import Goods from "../../models/goods";
-import StorageUtil, { StorageKey } from "../../models/StorageModel";
 import { connect } from "react-redux";
-/**
- * 某个分类的商品列表页面
- */
-class App extends Component {
+
+import StorageUtil, { StorageKey } from "../../models/StorageModel";
+
+class GoodGoodsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,21 +30,20 @@ class App extends Component {
         item={item}
         index={index}
         navigation={navigation}
-        type={StorageKey.catagoryGoods}
+        type={StorageKey.myHeartList}
         updateData={this._updateData}
       />
     );
   };
   _updateData = () => {
-    const { params } = this.props.navigation.state;
-    const cat_id = params ? params.cat_id : null;
     const { member_id } = this.props.userInfo;
-    Goods.goodCategoryGoodsList({ cat_id: cat_id, member_id }).then(res => {
-      this.setState({
-        dataArray: res.data
-      });
-
-      StorageUtil.SetStorage(StorageKey.catagoryGoods, newHistory);
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+      if (res.result == 1) {
+        this.setState({
+          dataArray: res.data
+        });
+        StorageUtil.SetStorage(StorageKey.myHeartList, res.data);
+      }
     });
   };
   componentDidMount() {
@@ -55,7 +53,6 @@ class App extends Component {
     const { params } = this.props.navigation.state;
     const title = params ? params.title : null;
     const { navigation } = this.props;
-
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -65,9 +62,8 @@ class App extends Component {
             navigation.goBack();
           })}
         />
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={{ paddingHorizontal: 20, marginBottom: 100 }}>
           <FlatList
-            keyExtractor={item => String(item.goods_id)}
             data={this.state.dataArray}
             renderItem={this._renderItemView}
           />
@@ -81,7 +77,7 @@ const mapStateToProps = state => {
     userInfo: state.user.userInfo
   };
 };
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(GoodGoodsList);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

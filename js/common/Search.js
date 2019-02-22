@@ -22,7 +22,7 @@ import {
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../util/screenUtil";
 import Goods from "../models/goods";
-import StorageUtil from "../models/StorageModel";
+import StorageUtil, { StorageKey } from "../models/StorageModel";
 import GoodsCell from "../common/GoodsCell";
 import { connect } from "react-redux";
 const { width, height } = Dimensions.get("window");
@@ -40,7 +40,7 @@ class SearchPage extends Component {
     };
   }
   _historyData = async () => {
-    StorageUtil.getSearchHistory()
+    StorageUtil.GetStorage(StorageKey.searchHistory)
       .then(res => {
         this.setState({
           history: res
@@ -74,7 +74,7 @@ class SearchPage extends Component {
     }
     newHistory.unshift(keyword);
     // 保存到本地存储
-    StorageUtil.setSearchHistory(newHistory);
+    StorageUtil.SetStorage(StorageKey.searchHistory, newHistory);
     setTimeout(() => {
       this._historyData();
     }, 1000);
@@ -87,7 +87,8 @@ class SearchPage extends Component {
         this.setState({
           goodsList: res.data
         });
-        StorageUtil.setSearchGoods(res.data);
+
+        StorageUtil.SetStorage(StorageKey.searchGoodGoods, res.data);
       }
     });
   };
@@ -238,6 +239,7 @@ class SearchPage extends Component {
   };
   componentWillMount() {
     this._updateData();
+    this._historyData();
   }
   // 单个商品的样式
   _goodItem = ({ item, index }) => {
@@ -247,7 +249,7 @@ class SearchPage extends Component {
         navigation={navigation}
         item={item}
         index={index}
-        type={"SEARCH_GOODGOODS"}
+        type={StorageKey.searchGoodGoods}
         updateData={this._updateData}
       />
     );

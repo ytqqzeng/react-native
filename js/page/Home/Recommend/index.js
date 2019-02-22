@@ -10,10 +10,10 @@ import {
   Image,
   Dimensions
 } from "react-native";
-import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
-import Goods from "../../models/goods";
-import { Label } from "../../common/Label";
-import StorageUtil from "../../models/StorageModel";
+import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
+import Goods from "../../../models/goods";
+import { Label } from "../../../common/Label";
+import StorageUtil, { StorageKey } from "../../../models/StorageModel";
 import { connect } from "react-redux";
 const { width } = Dimensions.get("window");
 let pageNo = 1; //当前第几页
@@ -77,7 +77,7 @@ class RecommendGood extends Component {
     //     })
     //     .done();
     let foot = 0;
-    Goods.goodSearch({ keyword: "包", member_id }).then(res => {
+    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           dataArray: res.data,
@@ -85,7 +85,8 @@ class RecommendGood extends Component {
           showFoot: foot,
           isRefreshing: false
         });
-        StorageUtil.setRecommendGoods(res.data);
+
+        StorageUtil.SetStorage(StorageKey.recommendGoods, res.data);
       }
     });
   }
@@ -138,7 +139,7 @@ class RecommendGood extends Component {
           navigation.navigate("GoodsDetail", {
             goodIndex: index,
             title: item.name,
-            type: "RECOMMEND_GOODS",
+            type: StorageKey.recommendGoods,
             updateData: this._updateData
           });
         }}
@@ -327,15 +328,15 @@ class RecommendGood extends Component {
   renderData() {
     const tmpData = [
       {
-        img: require("../../../res/image/banner/catagory1.jpg"),
+        img: require("../../../../res/image/banner/catagory1.jpg"),
         num: 133
       },
       {
-        img: require("../../../res/image/banner/catagory2.jpg"),
+        img: require("../../../../res/image/banner/catagory2.jpg"),
         num: 143
       },
       {
-        img: require("../../../res/image/banner/catagory3.jpg"),
+        img: require("../../../../res/image/banner/catagory3.jpg"),
         num: 99
       }
     ];

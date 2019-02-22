@@ -29,7 +29,7 @@ import NavBar from "./goodsNavBar";
 import ViewUtils from "../../util/ViewUtils";
 
 import Goods from "../../models/goods";
-import StorageUtil from "../../models/StorageModel";
+import StorageUtil, { StorageKey } from "../../models/StorageModel";
 import { connect } from "react-redux";
 import { asyncCheckPriceGoods, asyncFavoriteGoods } from "../../actions/goods";
 
@@ -182,26 +182,41 @@ class GoodsDetail extends Component {
     const { params } = this.props.navigation.state;
     const goodIndex = params ? params.goodIndex : null;
     const type = params ? params.type : null;
+    const isFootPrint = params ? params.isFootPrint : null;
+    const detailData = params ? params.detailData : null;
 
-    StorageUtil.getGoods(type)
-      .then(res => {
-        this.setState({
-          goodDetail: res[goodIndex]
-        });
-        return res[goodIndex];
-      })
-      .then(data => {
-        this._getFAQData(data);
-        this._footPrint(member_id, data);
-      })
-      .catch(err => console.warn("err::", err));
+    if (type) {
+      StorageUtil.GetStorage(type)
+        .then(res => {
+          this.setState({
+            goodDetail: res[goodIndex]
+          });
+          return res[goodIndex];
+        })
+        .then(data => {
+          this._getFAQData(data);
+          this._footPrint(member_id, data);
+        })
+        .catch(err => console.warn("err::", err));
+      // 足迹页面跳转过来的
+    } else if (isFootPrint) {
+      this.setState(
+        {
+          goodDetail: detailData
+        },
+        () => {
+          this._getFAQData(detailData);
+          this._footPrint(member_id, detailData);
+        }
+      );
+    }
     // 详情页商品推荐
     Goods.goodSearch({ keyword: "包", member_id }).then(res => {
       if (res.result == 1) {
         this.setState({
           recommend: res.data
         });
-        StorageUtil.setAuthorGoods(res.data);
+        StorageUtil.SetStorage(StorageKey.authorGoods, res.data);
       }
     });
   }
@@ -302,15 +317,16 @@ class GoodsDetail extends Component {
                   style={{
                     marginRight: 10,
                     borderRadius: scaleSize(3),
-                    fontSize: setSpText2(8),
-                    textAlign: "center"
+                    borderColor: "#FF5656",
+                    borderWidth: 1
                   }}
                 />
                 <Label
                   title={"现货"}
                   style={{
                     borderRadius: scaleSize(3),
-                    fontSize: setSpText2(8)
+                    borderColor: "#FF5656",
+                    borderWidth: 1
                   }}
                 />
               </View>
@@ -332,6 +348,7 @@ class GoodsDetail extends Component {
               navigation={this.props.navigation}
             />
           </View>
+          <View style={{ height: 15, backgroundColor: "#EEE" }} />
           <Faq
             data={faq}
             goods_id={goodDetail.goods_id}

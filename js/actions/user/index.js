@@ -47,7 +47,6 @@ export const asyncLoging = ({ username, password }) => {
       })
       .then(res => {
         if (res.result == 1) {
-          console.warn("res.data::", res.data);
           // 这里的dispatch不能次序放反 不然会导致userInfo还没有设置成功就跳转页面，然后newgoods页面里面获取不到userInfo数据
           dispatch(alreadyLogin(res.data));
           dispatch(loginStatus());

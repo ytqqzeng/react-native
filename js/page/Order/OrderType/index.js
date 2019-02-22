@@ -39,6 +39,16 @@ const orderArray = [
   "已取消",
   "交易完成"
 ];
+const status2Word = [
+  "新订单",
+  "去支付",
+  "等待发货",
+  "准备收货",
+  "确认交易",
+  "等待评价",
+  "订单已取消",
+  "完成订单"
+];
 // 通过参数过滤数组
 const filterArray = arg => item => item.status === arg;
 class OrderType extends Component {
@@ -74,7 +84,7 @@ class OrderType extends Component {
         }}
         style={styles.operateBtn}
       >
-        去支付
+        {status2Word[status]}
       </Text>
     );
   };
@@ -98,15 +108,14 @@ class OrderType extends Component {
 
   //   有规格的商品使用items_json，没有规格的商品使用goods
   _orderImg = (items_json, goods) => {
-    var goodsData;
+    var _img;
     if (items_json) {
-      goodsData = JSON.parse(items_json);
-      goodsData = goodsData[0];
+      var goodsData = JSON.parse(items_json);
+      _img = goodsData[0].image;
     } else {
-      //   var tmpData = JSON.parse(goods);
-      //   console.warn("tmpData::", tmpData);
+      var tmpData = JSON.parse(goods);
+      _img = tmpData.original;
     }
-    // return null;
 
     return (
       <View
@@ -118,7 +127,7 @@ class OrderType extends Component {
         }}
       >
         <Image
-          source={{ uri: goodsData.image }}
+          source={{ uri: _img }}
           style={{ width: scaleSize(110), height: scaleSize(110) }}
         />
       </View>
@@ -144,6 +153,36 @@ class OrderType extends Component {
       </View>
     );
   };
+  //   评价订单
+  _rateOrderBtn = (items_json, goods) => {
+    const { member_id } = this.props.userInfo;
+    var _img;
+    if (items_json) {
+      var goodsData = JSON.parse(items_json);
+      _img = goodsData[0].image;
+      _goods_id = goodsData[0].goods_id;
+    } else {
+      var tmpData = JSON.parse(goods);
+      _img = tmpData.original;
+      _goods_id = tmpData.goods_id;
+    }
+    return (
+      <View style={styles.btnWrapper}>
+        <Text
+          onPress={() => {
+            this.props.navigation.navigate("OrderRate", {
+              _img,
+              member_id,
+              _goods_id
+            });
+          }}
+          style={styles.deleteOrder}
+        >
+          评价订单
+        </Text>
+      </View>
+    );
+  };
   //   删除 取消订单 按钮
   _deleteOrderBtn = (status, order_id) => {
     let text;
@@ -153,13 +192,7 @@ class OrderType extends Component {
       text = "删除订单";
     }
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          marginTop: scaleSize(5)
-        }}
-      >
+      <View style={styles.btnWrapper}>
         <Text
           onPress={() => {
             this._deleteAndCancelSubmit(status, order_id);
@@ -210,6 +243,7 @@ class OrderType extends Component {
     });
   };
   _deleteOrder = params => {
+    const { member_id } = params;
     const { dispatch } = this.props;
     Order.deleteOrder(params).then(res => {
       console.warn("res::", res);
@@ -234,7 +268,6 @@ class OrderType extends Component {
     });
   };
   _renderItem = ({ item }) => {
-    // console.warn("item::", item);
     const {
       create_time,
       status,
@@ -243,13 +276,11 @@ class OrderType extends Component {
       order_id,
       goods
     } = item;
-    // console.warn("items_json::", items_json);
     const orderCreateTime = dayjs(create_time * 1000)
       .format()
       .slice(0, 10);
     //   86400000为一天的毫秒时间
     const orderEndTime = create_time * 1000 + 86400000;
-
     return (
       <View style={{ marginBottom: 20 }}>
         {/* 订单日期 */}
@@ -274,7 +305,11 @@ class OrderType extends Component {
           {this._countDown(orderEndTime)}
           {/* 操作按钮 */}
           {this._operateOrder(status, need_pay_money)}
-          {this._deleteOrderBtn(status, order_id)}
+
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            {this._deleteOrderBtn(status, order_id)}
+            {status === 1 ? this._rateOrderBtn(items_json, goods) : null}
+          </View>
         </View>
       </View>
     );
@@ -287,8 +322,6 @@ class OrderType extends Component {
     if (type === 9) {
       orderListData = orderList.orderList;
     }
-    console.warn("orderListData::", orderListData);
-    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <View>
@@ -348,5 +381,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: setSpText2(13),
     paddingVertical: scaleSize(9)
+  },
+  btnWrapper: {
+    flexDirection: "row",
+    marginTop: scaleSize(5),
+    marginHorizontal: 2
   }
 });

@@ -23,25 +23,59 @@ export default class OrderPay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      flag: "weixin" // 默认微信支付选中
+      flag: "weixin", // 默认微信支付选中
+      paying: "正在支付...."
     };
   }
   _submit = () => {
+    const { price } = this.props.navigation.state.params;
     const { flag } = this.state;
     if (flag === "weixin") {
-      alert("跳转微信支付");
+      this.setState(
+        {
+          flag: this.state.paying
+        },
+        () => {
+          setTimeout(() => {
+            this.props.navigation.navigate("OrderPayed", {
+              flag: "weixin",
+              price
+            });
+          }, 2000);
+        }
+      );
     } else if (flag === "zhifubao") {
-      alert("跳转到支付宝支付");
+      this.setState(
+        {
+          flag: this.state.paying
+        },
+        () => {
+          setTimeout(() => {
+            this.props.navigation.navigate("OrderPayed", {
+              flag: "zhifubao",
+              price
+            });
+          }, 2000);
+        }
+      );
+      //   重复点击
     } else {
-      alert("error");
+      return false;
     }
   };
   render() {
     const { navigation } = this.props;
-    const { params } = this.props.navigation.state;
-    const price = params.price;
+    const { price } = navigation.state.params;
     const { flag } = this.state;
-    const payName = flag === "weixin" ? "微信支付" : "支付宝支付";
+    let payName;
+    if (flag === "weixin") {
+      payName = "微信支付";
+    } else if (flag === "zhifubao") {
+      payName = "支付宝支付";
+    } else {
+      payName = "正在支付...  ";
+    }
+
     return (
       <View style={styles.container}>
         <NavigationBar

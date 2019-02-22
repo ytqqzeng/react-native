@@ -8,11 +8,8 @@ export const Label = ({ title, style }) => {
         color: "#FC6969",
         textAlign: "center",
         paddingHorizontal: scaleSize(5),
-        // paddingVertical: scaleSize(1),
-        fontSize: setSpText2(7),
-        borderColor: "#FC6969",
-        borderWidth: 1,
-        borderRadius: scaleSize(6),
+        paddingVertical: scaleSize(2),
+        fontSize: setSpText2(8),
         ...style
       }}
     >

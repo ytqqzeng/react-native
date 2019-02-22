@@ -36,8 +36,6 @@ export default class GoodsCell extends Component {
     if (isCheckedPriceGoods) {
       is_viewed_price = 1;
     }
-    // console.warn("item::", item);
-    // console.warn("type::", type);
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -107,9 +105,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5FCFF"
-  },
-  image: {
-    height: 22,
-    width: 22
   }
 });

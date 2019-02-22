@@ -69,6 +69,7 @@ class CountDown extends Component {
     this.stop();
   }
   getDateData(endDate) {
+    //   let now = new Date()
     let diff = (Date.parse(new Date(endDate)) - Date.parse(new Date())) / 1000;
 
     if (diff <= 0) {

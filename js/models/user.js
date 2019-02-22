@@ -79,12 +79,11 @@ export default class User {
     });
   }
   /**
-   * 获取用户地址的快递费用
+   * 获取用户地址的订单相关费用 包括（viewd-cost 运费 advance）
    * @param {*} param
    */
-  static getUserExpressFee(param) {
-    console.warn("parassssssssssssssssssssssm::", param);
-    return Fetch.fetchGet(UserApi.getUserExpressFee, param).catch(error => {
+  static getUserOrderFee(param) {
+    return Fetch.fetchGet(UserApi.getUserOrderFee, param).catch(error => {
       console.warn("error::错误", error);
       return false;
     });

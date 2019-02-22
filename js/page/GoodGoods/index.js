@@ -31,14 +31,22 @@ export default class GoodGoods extends Component {
     super(props);
     this.state = {
       swipperArray: [],
-      flatListArray: []
+      flatListArray: [],
+      myHeartListLen: 0 //心动清单多少条数据
     };
   }
+  //   这里的数据是借用swipperArray的数据
   _recommendOneGoods = () => {
+    const { swipperArray } = this.state;
+    const oneData = swipperArray.slice(0, 1);
+    if (oneData.length === 0) return null;
     return (
       <TouchableOpacity
         onPress={() => {
-          alert(1);
+          this.props.navigation.navigate("GoodsDetail", {
+            type: StorageKey.swipperGoods,
+            goodIndex: 0
+          });
         }}
         style={{ marginTop: scaleSize(10) }}
       >
@@ -46,20 +54,18 @@ export default class GoodGoods extends Component {
         <Text
           style={{ fontSize: setSpText2(15), marginVertical: scaleSize(2) }}
         >
-          Ck One summer新款中性男女士香水100ML
+          {oneData[0]["name"]}
         </Text>
         <Text style={{ marginVertical: scaleSize(2), color: "#ccc" }}>
-          Ck One summer新款中性男女士香水100ML
+          {oneData[0]["name"]}
         </Text>
         <Image
           source={{
-            uri:
-              "http://static.v5.javamall.com.cn/attachment/goods/201511240227066343.jpg"
+            uri: oneData[0]["original"]
           }}
           style={{
             height: scaleSize(200),
-            // borderColor: "#eee",
-            // borderWidth: 1,
+
             borderRadius: scaleSize(12)
           }}
         />
@@ -93,6 +99,7 @@ export default class GoodGoods extends Component {
    * 两个类目
    */
   _twoCategory = () => {
+    const { myHeartListLen } = this.state;
     return (
       <View
         style={{
@@ -103,7 +110,9 @@ export default class GoodGoods extends Component {
       >
         <TouchableOpacity
           onPress={() => {
-            alert(1);
+            this.props.navigation.navigate("MyHeartList", {
+              title: "心动清单"
+            });
           }}
           style={{
             flex: 1,
@@ -119,12 +128,13 @@ export default class GoodGoods extends Component {
             }}
             source={require("../../../res/image/banner/xinongqingdan.jpg")}
           />
-          {this._goodsCount(15)}
+          {this._goodsCount(myHeartListLen)}
         </TouchableOpacity>
-
         <TouchableOpacity
           onPress={() => {
-            alert(2);
+            this.props.navigation.navigate("GoodGoodsList", {
+              title: "好物推荐"
+            });
           }}
           style={{
             flex: 1,
@@ -140,7 +150,7 @@ export default class GoodGoods extends Component {
             }}
             source={require("../../../res/image/banner/haowu.jpg")}
           />
-          {this._goodsCount(25)}
+          {this._goodsCount(myHeartListLen)}
         </TouchableOpacity>
       </View>
     );
@@ -193,7 +203,9 @@ export default class GoodGoods extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          alert(3);
+          this.props.navigation.navigate("MyHeartList", {
+            title: "5折商品"
+          });
         }}
       >
         <Image
@@ -210,6 +222,23 @@ export default class GoodGoods extends Component {
   };
 
   componentDidMount() {
+    //   心动清单数量显示的逻辑
+    StorageUtil.GetStorage(StorageKey.myHeartList).then(
+      res => {
+        this.setState({
+          myHeartListLen: res.length
+        });
+      },
+      err => {
+        Goods.goodSearch({ keyword: "女" }).then(res => {
+          if (res.result == 1) {
+            this.setState({
+              myHeartListLen: res.data.length
+            });
+          }
+        });
+      }
+    );
     StorageUtil.GetStorage(StorageKey.swipperGoods).then(res => {
       this.setState({
         swipperArray: res
@@ -230,33 +259,20 @@ export default class GoodGoods extends Component {
           title={"好物"}
           style={{ backgroundColor: "steelblue" }}
           rightButton={ViewUtils.getRightImageButton(() => {
-            navigation.navigate("Search", { name: "动态的" });
+            navigation.navigate("Search");
           })}
         />
         <ScrollView>
           <View style={{ paddingHorizontal: 30 }}>
             {this._recommendOneGoods()}
-
             {this._twoCategory()}
             {this._editRecommend()}
             <View>
               <Swipper data={swipperArray} {...this.props} />
             </View>
-            <View
-              style={{
-                height: scaleSize(10),
-                backgroundColor: "#eee",
-                marginVertical: scaleSize(20)
-              }}
-            />
+            <View style={styles.line} />
             {this._flatList()}
-            <View
-              style={{
-                height: scaleSize(10),
-                backgroundColor: "#eee",
-                marginVertical: scaleSize(20)
-              }}
-            />
+            <View style={styles.line} />
             {this._countGoods()}
           </View>
         </ScrollView>
@@ -268,5 +284,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5FCFF"
+  },
+  line: {
+    height: scaleSize(10),
+    backgroundColor: "#eee",
+    marginVertical: scaleSize(20)
   }
 });

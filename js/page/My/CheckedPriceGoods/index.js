@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import NavigationBar from "../../../common/NavigationBar";
 import ViewUtils from "../../../util/ViewUtils";
 import GoodsCell from "../../../common/GoodsCell";
@@ -21,7 +21,8 @@ class CheckPriceGoods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataArray: []
+      dataArray: [],
+      loading: true
     };
   }
   /**
@@ -48,7 +49,8 @@ class CheckPriceGoods extends Component {
     Goods.checkedPriceGoodsList({ uname }).then(res => {
       if (res.result == 1) {
         this.setState({
-          dataArray: res.data
+          dataArray: res.data,
+          loading: false
         });
       }
     });
@@ -70,10 +72,14 @@ class CheckPriceGoods extends Component {
           })}
         />
         <View style={{ paddingHorizontal: 20, marginBottom: 100 }}>
-          <FlatList
-            data={this.state.dataArray}
-            renderItem={this._renderItemView}
-          />
+          {this.state.loading ? (
+            <ActivityIndicator size="large" color="#FC6969" />
+          ) : (
+            <FlatList
+              data={this.state.dataArray}
+              renderItem={this._renderItemView}
+            />
+          )}
         </View>
       </View>
     );
