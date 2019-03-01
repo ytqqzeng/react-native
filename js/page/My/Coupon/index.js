@@ -7,40 +7,65 @@
  */
 
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
-import OrderType from "./OrderType";
-import { scaleSize, setSpText2 } from "../../util/screenUtil";
-import NavigationBar from "../../common/NavigationBar";
-import ViewUtils from "../../util/ViewUtils";
+import {
+  Platform,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Text,
+  TextInput,
+  View
+} from "react-native";
 
+import { scaleSize, setSpText2 } from "../../../util/screenUtil";
+import NavigationBar from "../../../common/NavigationBar";
+import ViewUtils from "../../../util/ViewUtils";
+import CouponType from "./CouponType";
+// import StorageUtil, { StorageKey } from "../../../models/StorageModel";
+import User from "../../../models/user";
 import ScrollableTabView, {
   ScrollableTabBar
 } from "react-native-scrollable-tab-view";
 import { connect } from "react-redux";
-import { asyncUserOrderList } from "../../actions/order";
-import { setPageKey } from "../../actions/user";
-class OrderPage extends Component {
+// import { asyncUserOrderList } from "../../../actions/order";
+class Coupon extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      usedData: [],
+      noUseData: []
+    };
   }
+
+  _filterData = data => {
+    const noUseData = data.filter(item => {
+      return item.used === 0;
+    });
+    const usedData = data.filter(item => {
+      return item.used === 1;
+    });
+    this.setState({
+      usedData,
+      noUseData
+    });
+  };
   componentDidMount() {
-    const { dispatch, userInfo, navigation } = this.props;
-    const pageKey = navigation.state.key;
-    const { member_id } = userInfo;
-    dispatch(asyncUserOrderList({ member_id }));
-    // 记录这个页面的路由到时候付款成功可以往回跳
-    if (pageKey) {
-      const newUserInfo = { ...userInfo, pageKey };
-      dispatch(setPageKey({ ...newUserInfo }));
-    }
+    const { member_id } = this.props.userInfo;
+    User.getUserCoupon({ member_id }).then(res => {
+      if (res.result === 1) {
+        this._filterData(res.data);
+      }
+    });
   }
   render() {
     const { navigation } = this.props;
+    const { usedData, noUseData } = this.state;
+    console.warn("noUseData::", noUseData);
     return (
       <View style={styles.container}>
         <NavigationBar
-          title={"我的订单"}
+          title={"优惠券"}
           statusBar={{ backgroundColor: "steelblue", hidden: true }}
           leftButton={ViewUtils.getLeftButton(() => {
             navigation.goBack(null);
@@ -62,17 +87,23 @@ class OrderPage extends Component {
                 fontSize: setSpText2(12),
                 borderBottomColor: "#fff"
               }}
+
+              // style ={styles.scrollBox}
             />
           )} // 自定义tabbar 可以不要这个
         >
-          <OrderType tabLabel="全部" navigation={navigation} type={9} />
-          <OrderType tabLabel="待付款" navigation={navigation} type={1} />
-          <OrderType tabLabel="已付款" navigation={navigation} type={2} />
-          <OrderType tabLabel="已发货" navigation={navigation} type={3} />
-          <OrderType tabLabel="已收货" navigation={navigation} type={4} />
-          <OrderType tabLabel="交易成功" navigation={navigation} type={5} />
-          <OrderType tabLabel="已取消" navigation={navigation} type={6} />
-          <OrderType tabLabel="售后订单" navigation={navigation} type={7} />
+          <CouponType
+            tabLabel={`未使用(${noUseData.length})`}
+            navigation={navigation}
+            data={noUseData}
+            used={false}
+          />
+          <CouponType
+            tabLabel="使用记录"
+            navigation={navigation}
+            data={usedData}
+            used={true}
+          />
         </ScrollableTabView>
       </View>
     );
@@ -81,10 +112,9 @@ class OrderPage extends Component {
 const mapStateToProps = state => {
   return {
     userInfo: state.user.userInfo
-    //   goodsInfo: state.goods
   };
 };
-export default connect(mapStateToProps)(OrderPage);
+export default connect(mapStateToProps)(Coupon);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

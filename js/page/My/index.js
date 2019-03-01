@@ -227,7 +227,7 @@ class MyPage extends Component {
           icon: require("../../../res/image/setting/icon_youhuijuan.png"),
           title: "优惠卷",
           other: "",
-          navigate: "HelpCenter"
+          navigate: "Coupon"
         }
       ],
       [

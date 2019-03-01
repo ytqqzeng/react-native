@@ -27,11 +27,13 @@ import GoodsAuthor from "./GoodsAuthor";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import NavBar from "./goodsNavBar";
 import ViewUtils from "../../util/ViewUtils";
+import FnUtil from "../../util/fnUtils";
 
 import Goods from "../../models/goods";
 import StorageUtil, { StorageKey } from "../../models/StorageModel";
 import { connect } from "react-redux";
 import { asyncCheckPriceGoods, asyncFavoriteGoods } from "../../actions/goods";
+import { setPageKey } from "../../actions/user";
 
 import StatusBar from "./StatusBar";
 import HandleBar from "./HandleBar";
@@ -51,6 +53,7 @@ class GoodsDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isPrepay: true, // 判断是否是支付定金
       specVisible: false,
       scrollY: new Animated.Value(
         // iOS has negative initial scroll value because content inset...
@@ -184,7 +187,10 @@ class GoodsDetail extends Component {
     const type = params ? params.type : null;
     const isFootPrint = params ? params.isFootPrint : null;
     const detailData = params ? params.detailData : null;
-
+    // const pageKey = params ? params.pageKey : null;
+    const { dispatch, userInfo } = this.props;
+    const pageKey = this.props.navigation.state.key;
+    // console.warn("newTest::", newTest);
     if (type) {
       StorageUtil.GetStorage(type)
         .then(res => {
@@ -219,35 +225,18 @@ class GoodsDetail extends Component {
         StorageUtil.SetStorage(StorageKey.authorGoods, res.data);
       }
     });
+    // 设置是从哪个页面跳进来的/
+    // console.warn("pageKey::", pageKey);
+    if (pageKey) {
+      const newUserInfo = { ...userInfo, pageKey };
+      dispatch(setPageKey({ ...newUserInfo }));
+    }
   }
 
-  //   把详情数组转换为图片url数组
-  _utilImg = (str = "") => {
-    if (!str) return [];
-    var ImgUrlArr = [];
-    //匹配图片（g表示匹配所有结果i表示区分大小写）
-    var imgReg = /<img.*?(?:>|\/>)/gi;
-    //匹配src属性
-    var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
-    var arr = str.match(imgReg);
-    // console.warn("所有已成功匹配图片的数组：" + arr);
-    if (!arr) return [];
-    for (var i = 0; i < arr.length; i++) {
-      var src = arr[i].match(srcReg);
-      //获取图片地址
-      if (src[1]) {
-        ImgUrlArr.push(src[1]);
-      }
-      //当然你也可以替换src属性
-      if (src[0]) {
-        var t = src[0].replace(/src/i, "href");
-      }
-    }
-    return ImgUrlArr;
-  };
   _goodDetail = () => {
     const { goodDetail, viewHeight, recommend, faq } = this.state;
-    const imgArr = this._utilImg(goodDetail.intro);
+
+    const imgArr = FnUtil.utilImg(goodDetail.intro);
     const scrollY = Animated.add(
       this.state.scrollY,
       Platform.OS === "ios" ? HEADER_MAX_HEIGHT : 0
@@ -263,6 +252,7 @@ class GoodsDetail extends Component {
       outputRange: [0, HEADER_SCROLL_DISTANCE / 2],
       extrapolate: "clamp"
     });
+
     return (
       <View style={{ flex: 1 }}>
         <Animated.View
@@ -273,7 +263,9 @@ class GoodsDetail extends Component {
         >
           <Animated.Image
             resizeMode={"contain"}
-            source={{ uri: goodDetail.original }}
+            source={{
+              uri: FnUtil.getOriginalImg(goodDetail.original, "goods")
+            }}
             style={[
               styles.backgroundImage,
               {
@@ -343,10 +335,13 @@ class GoodsDetail extends Component {
             </View>
           </View>
           <View>
-            <GoodsAuthor
-              recommend={recommend}
-              navigation={this.props.navigation}
-            />
+            {goodDetail.goods_id ? (
+              <GoodsAuthor
+                goods_id={goodDetail.goods_id}
+                recommend={recommend}
+                navigation={this.props.navigation}
+              />
+            ) : null}
           </View>
           <View style={{ height: 15, backgroundColor: "#EEE" }} />
           <Faq
@@ -394,9 +389,9 @@ class GoodsDetail extends Component {
   };
   _submit = data => {
     const { navigation } = this.props;
-    const { goodDetail, payment } = this.state;
+    const { goodDetail, payment, isPrepay } = this.state;
     const { name, original, goods_id, mktprice, viewed_cost } = goodDetail;
-    var a = { name, original, goods_id, mktprice, viewed_cost };
+    var a = { name, original, goods_id, mktprice, viewed_cost, isPrepay };
     const newData = { ...data, ...a };
     navigation.navigate("OrderConfirm", newData);
   };
@@ -487,14 +482,24 @@ class GoodsDetail extends Component {
             goodDetail={goodDetail}
             payment={payment}
             showPrice={this.showPrice}
-            paymented={this.paymented}
+            paymented={() => {
+              if (!goodDetail.is_viewed_price) {
+                Alert.alert("提示", "需要先查看价格");
+                return;
+              }
+              this.setState({
+                specVisible: true,
+                isPrepay: true
+              });
+            }}
             clickBtn={() => {
               if (!goodDetail.is_viewed_price) {
                 Alert.alert("提示", "需要先查看价格");
                 return;
               }
               this.setState({
-                specVisible: true
+                specVisible: true,
+                isPrepay: false
               });
             }}
           />

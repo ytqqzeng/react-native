@@ -21,11 +21,12 @@ import {
 import { scaleSize, setSpText2 } from "../../util/screenUtil";
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
+import FnUtils from "../../util/fnUtils";
 import Order from "../../models/order";
 import User from "../../models/user";
 import { connect } from "react-redux";
 import { Label } from "../../common/Label";
-import { updateUserInfo } from "../../actions/user";
+// import { updateUserInfo } from "../../actions/user";
 class OrderConfirm extends Component {
   constructor(props) {
     super(props);
@@ -108,7 +109,7 @@ class OrderConfirm extends Component {
   };
   componentDidMount() {
     const { params } = this.props.navigation.state;
-    console.warn("this.props.navigation::", this.props.navigation);
+
     this.setState({
       goodsData: params
     });
@@ -196,7 +197,7 @@ class OrderConfirm extends Component {
     return (
       <View style={[styles.panel, { flexDirection: "row" }]}>
         <Image
-          source={{ uri: original }}
+          source={{ uri: FnUtils.getOriginalImg(original, "goods") }}
           style={{ width: scaleSize(70), height: scaleSize(70) }}
         />
         <View style={{ paddingLeft: scaleSize(5) }}>
@@ -387,21 +388,21 @@ class OrderConfirm extends Component {
     const addrInfo = this.state.addr;
     const {
       remark,
-      goodsData,
+      goodsData, // 上一个页面传递过来的所有参数
       expressFee,
       advanceCount,
       viewed_cost
     } = this.state;
     const { navigation } = this.props;
-    const { goods_id, product_id } = goodsData;
+    const { goods_id, product_id, isPrepay, mktprice } = goodsData;
     const { member_id, province, city, region, addr, name, mobile } = addrInfo;
     const shipping_area = `${province}-${city}-${region}`;
     if (!name) {
       Alert.alert("未提交", "请添加地址");
       return;
     }
-    const params = {
-      discount: Number(viewed_cost) + Number(advanceCount),
+    var params = {
+      discount: isPrepay ? 0 : Number(viewed_cost) + Number(advanceCount),
       goods_id,
       member_id,
       product_id,
@@ -412,12 +413,17 @@ class OrderConfirm extends Component {
       shipping_amount: expressFee, // 快递价格
       remark // 备注
     };
-
+    if (isPrepay) {
+      params = { ...params, prepay: mktprice * 0.1 };
+    }
     Order.createOrder(params).then(res => {
-      console.warn("res::", res);
       if (res.result == 1) {
         navigation.navigate("OrderPay", {
-          price: res.data
+          price: isPrepay ? mktprice * 0.1 : res.data.need_pay_money,
+          order_id: res.data.order_id,
+          goods_id,
+          member_id,
+          isPrepay
         });
       } else {
         alert("提交订单失败");
@@ -433,8 +439,9 @@ class OrderConfirm extends Component {
       addr,
       viewed_cost
     } = this.state;
-    const { navigation } = this.props;
 
+    const { isPrepay } = goodsData;
+    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -451,15 +458,21 @@ class OrderConfirm extends Component {
               backgroundColor: "#ddd"
             }}
           >
+            {isPrepay ? (
+              <Text style={{ paddingHorizontal: scaleSize(15) }}>
+                定金支付确认
+              </Text>
+            ) : null}
             {this._showAddress(addr)}
             {this._showTitle("商品信息")}
             {this._showGoods()}
             {this._note()}
             {this._showTitle("", { paddingVertical: scaleSize(3) })}
-            {this._coupon()}
-            {this._expressFee()}
-            {this._viewedCost()}
-            {this._advance()}
+
+            {isPrepay ? null : this._coupon()}
+            {isPrepay ? null : this._expressFee()}
+            {isPrepay ? null : this._viewedCost()}
+            {isPrepay ? null : this._advance()}
           </View>
         </ScrollView>
         <View
@@ -474,7 +487,10 @@ class OrderConfirm extends Component {
           <View style={{ flexDirection: "row" }}>
             <Text style={[styles.text, {}]}>合计：</Text>
             <Text style={[styles.text, { color: "#FA4D50" }]}>
-              ¥ {goodsData.mktprice + expressFee - viewed_cost - advanceCount}
+              ¥{" "}
+              {isPrepay
+                ? goodsData.mktprice * 0.1
+                : goodsData.mktprice + expressFee - viewed_cost - advanceCount}
             </Text>
           </View>
           <Text

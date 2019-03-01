@@ -15,7 +15,8 @@ import {
   View,
   TouchableOpacity
 } from "react-native";
-import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
+import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
+import FnUtils from "../../../util/fnUtils";
 export default class ThemeRecommend extends Component {
   render() {
     let { data, index, navigation, updateData } = this.props;
@@ -40,7 +41,7 @@ export default class ThemeRecommend extends Component {
           <Image
             resizeMode={"contain"}
             style={styles.image}
-            source={{ uri: data.original }}
+            source={{ uri: FnUtils.getOriginalImg(data.original, "goods") }}
           />
         </View>
       </TouchableOpacity>

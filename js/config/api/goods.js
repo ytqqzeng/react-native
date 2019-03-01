@@ -62,5 +62,40 @@ export const GoodsApi = {
   footPrintList: {
     url: `${ROOT_URL}shop/api/shop/goods-ext/get-viewed-goods.do`,
     method: "GET"
+  },
+  // 获取最新商品 列表
+  getLatestGoods: {
+    url: `${ROOT_URL}shop/api/shop/goods-ext/get-latest-goods.do`,
+    method: "GET"
+  },
+  // 获取首页轮播 图片
+  activityBannerImg: {
+    url: `${ROOT_URL}shop/api/shop/activity-ext/get-subject.do`,
+    method: "GET"
+  },
+  // 通过首页轮播图片得到专题数据
+  getSubjectImgs: {
+    url: `${ROOT_URL}shop/api/shop/activity-ext/get-subject-images.do`,
+    method: "GET"
+  },
+  // 通过首页轮播图片得到专题商品数据
+  getSubjectGoods: {
+    url: `${ROOT_URL}shop/api/shop/goods-ext/get-subject-goods.do`,
+    method: "GET"
+  },
+  // 好物 活动数据
+  getCurrentActivity: {
+    url: `${ROOT_URL}shop/api/shop/activity-ext/get-current-activity.do`,
+    method: "GET"
+  },
+  // 好物 活动商品的数据
+  getCurrentActivityGoods: {
+    url: `${ROOT_URL}shop/api/shop/activity-ext/get-current-activity.do`,
+    method: "GET"
+  },
+  // 商品评价的数据
+  getComments: {
+    url: `${ROOT_URL}shop/api/shop/goods-ext/get-comments.do`,
+    method: "GET"
   }
 };

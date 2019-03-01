@@ -17,6 +17,7 @@ import {
   View
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../util/screenUtil";
+import FnUtils from "../util/fnUtils";
 
 import StorageUtil, { StorageKey } from "../models/StorageModel";
 import Swiper from "react-native-swiper";
@@ -31,7 +32,8 @@ export default class Swipper extends Component {
   rederImage(data, key) {
     // isShowText 是否显示文字
     const { navigation, isShowText, updateData } = this.props;
-    let Imageurl = data.original;
+    let Imageurl = FnUtils.getOriginalImg(data.banner, "subject");
+    console.warn("Imageurl::", Imageurl);
     return (
       <TouchableOpacity
         key={key}
@@ -39,8 +41,8 @@ export default class Swipper extends Component {
           navigation.navigate("GoodsDetail", {
             goodIndex: key,
             title: data.name,
-            type: StorageKey.swipperGoods,
-            updateData: updateData
+            type: StorageKey.swipperGoods
+            // updateData: updateData
           });
         }}
       >
@@ -54,7 +56,7 @@ export default class Swipper extends Component {
           <Image
             style={styles.img}
             source={{ uri: Imageurl }}
-            resizeMode={"cover"}
+            resizeMode={"contain"}
           />
         </View>
       </TouchableOpacity>
@@ -113,6 +115,6 @@ const styles = StyleSheet.create({
   },
   img: {
     flex: 1,
-    height: 400
+    height: 450
   }
 });

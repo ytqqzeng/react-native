@@ -35,5 +35,9 @@ export const UserApi = {
   deleteUserAddress: {
     url: `${ROOT_URL}shop/api/shop/member-ext/delete-address.do`,
     method: "GET"
+  },
+  getUserCoupon: {
+    url: `${ROOT_URL}shop/api/shop/member-ext/get-bonus.do`,
+    method: "GET"
   }
 };

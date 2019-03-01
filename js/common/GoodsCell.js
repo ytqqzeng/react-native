@@ -16,6 +16,7 @@ import {
   View
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../util/screenUtil";
+import FnUtils from "../util/fnUtils";
 /**
  * 搜索 类目 的单个商品展现样式
  * 组件使用： 需传入 item（单个商品的数据）, index（数据的索引位置）, navigation,type(存到数据库的key)
@@ -31,6 +32,8 @@ export default class GoodsCell extends Component {
       isCheckedPriceGoods
     } = this.props;
 
+    const pageKey = navigation.state.key;
+    // const pageId = navigation
     var is_viewed_price = item.is_viewed_price;
     // 个人中心 已查看价格的商品列表数据里面没有返回is_viewed_price 所以做此判断
     if (isCheckedPriceGoods) {
@@ -44,13 +47,14 @@ export default class GoodsCell extends Component {
               goodIndex: index,
               title: item.name,
               type: type,
-              updateData: updateData
+              updateData: updateData,
+              pageKey: pageKey
             });
           }}
         >
           <View style={{ flexDirection: "row", marginTop: scaleSize(15) }}>
             <Image
-              source={{ uri: item.original }}
+              source={{ uri: FnUtils.getOriginalImg(item.original, "goods") }}
               style={{
                 width: scaleSize(100),
                 height: scaleHeight(100),
@@ -58,7 +62,7 @@ export default class GoodsCell extends Component {
               }}
             />
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: setSpText2(10), flexWrap: "wrap" }}>
+              <Text style={{ fontSize: setSpText2(13), flexWrap: "wrap" }}>
                 {item.name}
               </Text>
               <Text style={{ marginTop: scaleSize(10) }}>
@@ -67,26 +71,27 @@ export default class GoodsCell extends Component {
               {is_viewed_price ? (
                 <Text
                   style={{
-                    fontSize: setSpText2(7),
+                    fontSize: setSpText2(12),
                     flexWrap: "wrap",
                     marginTop: scaleSize(10)
                   }}
                 >
-                  Price:{item.mktprice}
+                  价格:{item.mktprice}
                 </Text>
               ) : (
                 <Text
                   style={{
-                    fontSize: setSpText2(7),
+                    fontSize: setSpText2(8),
                     marginTop: scaleSize(10),
                     paddingHorizontal: scaleSize(4),
-                    paddingVertical: scaleSize(1),
+                    paddingVertical: scaleSize(2),
                     borderColor: "#FF5656",
                     borderRadius: scaleSize(10),
                     borderWidth: 1,
                     color: "#FF5656",
                     width: scaleSize(40),
                     textAlign: "center",
+                    // textAlignVertical: "center",
                     fontSize: setSpText2(7)
                   }}
                 >

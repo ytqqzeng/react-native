@@ -21,6 +21,7 @@ import dayjs from "dayjs";
 import NavigationBar from "../../../common/NavigationBar";
 import ViewUtils from "../../../util/ViewUtils";
 import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
+import FnUtils from "../../../util/fnUtils";
 import Goods from "../../../models/goods";
 // 获取索引
 function getArrayIndex(arr, arg) {
@@ -87,7 +88,7 @@ export default class FootPrint extends Component {
         }}
       >
         <Image
-          source={{ uri: item.original }}
+          source={{ uri: FnUtils.getOriginalImg(item.original, "goods") }}
           style={{ width: scaleSize(90), height: scaleSize(90) }}
         />
         <View

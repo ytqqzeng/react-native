@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  Button,
+  WebView,
   ScrollView,
   Text,
   FlatList,
@@ -20,6 +20,7 @@ import {
 } from "react-native";
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
+import FnUtils from "../../util/fnUtils";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import Swipper from "./Swipper";
 import Goods from "../../models/goods";
@@ -31,6 +32,8 @@ export default class GoodGoods extends Component {
     super(props);
     this.state = {
       swipperArray: [],
+      currentActivity: {}, // 活动数据
+      currentActivityGoods: [], // 活动商品列表
       flatListArray: [],
       myHeartListLen: 0 //心动清单多少条数据
     };
@@ -39,11 +42,12 @@ export default class GoodGoods extends Component {
   _recommendOneGoods = () => {
     const { swipperArray } = this.state;
     const oneData = swipperArray.slice(0, 1);
+    const { navigation } = this.props;
     if (oneData.length === 0) return null;
     return (
       <TouchableOpacity
         onPress={() => {
-          this.props.navigation.navigate("GoodsDetail", {
+          navigation.navigate("GoodsDetail", {
             type: StorageKey.swipperGoods,
             goodIndex: 0
           });
@@ -61,7 +65,7 @@ export default class GoodGoods extends Component {
         </Text>
         <Image
           source={{
-            uri: oneData[0]["original"]
+            uri: FnUtils.getOriginalImg(oneData[0]["original"], "goods")
           }}
           style={{
             height: scaleSize(200),
@@ -177,7 +181,7 @@ export default class GoodGoods extends Component {
           renderItem={({ item }) => (
             <TouchableOpacity>
               <Image
-                source={{ uri: item.original }}
+                source={{ uri: FnUtils.getOriginalImg(item.original, "goods") }}
                 style={{
                   width: scaleSize(100),
                   height: scaleHeight(100),
@@ -220,8 +224,48 @@ export default class GoodGoods extends Component {
       </TouchableOpacity>
     );
   };
+  _currentActivity = () => {
+    const { currentActivity, currentActivityGoods } = this.state;
+    var imgArray = FnUtils.utilImg(currentActivity.description);
 
+    return (
+      <View style={{ backgroundColor: "#FFF" }}>
+        <Text style={{ paddingVertical: 5, fontSize: 20 }}>
+          {currentActivity.activity_name}
+        </Text>
+        {imgArray.map(item => {
+          return (
+            <View style={{ marginVertical: 10 }}>
+              <Image source={{ uri: item }} style={{ height: 300 }} />
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
   componentDidMount() {
+    //   当前活动的数据
+    var activity_id;
+    Goods.getCurrentActivity().then(res => {
+      console.warn("res1::", res);
+      if (res.result === 1) {
+        this.setState({
+          currentActivity: res.data
+        });
+        activity_id = res.data.activity_id;
+        // 如果range_type=2 继续获取商品列表
+        if (res.data.range_type === 2) {
+          Goods.getCurrentActivityGoods({ activity_id }).then(res => {
+            console.warn("res2::", res);
+            if (res.result === 1) {
+              this.setState({
+                currentActivityGoods: res.data
+              });
+            }
+          });
+        }
+      }
+    });
     //   心动清单数量显示的逻辑
     StorageUtil.GetStorage(StorageKey.myHeartList).then(
       res => {
@@ -264,7 +308,8 @@ export default class GoodGoods extends Component {
         />
         <ScrollView>
           <View style={{ paddingHorizontal: 30 }}>
-            {this._recommendOneGoods()}
+            {/* {this._recommendOneGoods()} */}
+            {this._currentActivity()}
             {this._twoCategory()}
             {this._editRecommend()}
             <View>

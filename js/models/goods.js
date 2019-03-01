@@ -136,4 +136,76 @@ export default class Goods {
       return false;
     });
   }
+  /**
+   * 获取最新商品
+   * @param {*} param
+   */
+  static getLatestGoods(param) {
+    return Fetch.fetchGet(GoodsApi.getLatestGoods, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
+  /**
+   * 获取首页轮播图片
+   * @param {*} param
+   */
+  static activityBannerImg(param) {
+    return Fetch.fetchGet(GoodsApi.activityBannerImg, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
+  /**
+   * 根据首页轮播图 获取专题图片信息
+   * @param {*} param
+   */
+  static getSubjectImgs(param) {
+    return Fetch.fetchGet(GoodsApi.getSubjectImgs, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
+  /**
+   * 根据首页轮播图 获取专题商品
+   * @param {*} param
+   */
+  static getSubjectGoods(param) {
+    return Fetch.fetchGet(GoodsApi.getSubjectGoods, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
+  /**
+   * 好物 活动数据
+   * @param {*} param
+   */
+  static getCurrentActivity(param) {
+    return Fetch.fetchGet(GoodsApi.getCurrentActivity, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
+  /**
+   * 好物 活动商品的数据
+   * @param {*} param
+   */
+  static getCurrentActivityGoods(param) {
+    return Fetch.fetchGet(GoodsApi.getCurrentActivityGoods, param).catch(
+      error => {
+        console.warn("error::错误", error);
+        return false;
+      }
+    );
+  }
+  /**
+   * 获取商品的评价信息
+   * @param {*} param
+   */
+  static getComments(param) {
+    return Fetch.fetchGet(GoodsApi.getComments, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
 }

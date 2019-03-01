@@ -73,8 +73,10 @@ class UserInfo extends Component {
     } = this.state;
 
     if (avatar) {
+      console.warn("avatar::", avatar);
       User.uploadAvatar(avatar)
         .then(res => {
+          console.warn("res::", res);
           this.setState({
             face: res.original
           });

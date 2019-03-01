@@ -4,7 +4,8 @@ import HomePage from "../page/HomePage";
 import MyPage from "../page/My";
 import GoodsDetail from "../page/GoodsDetail";
 import HomeIndex from "../page/Home";
-import NewGood from "../page/Home/NewGood";
+import NewGood from "../page/Home/NewGoods";
+import SwiperDetail from "../page/Home/NewGoods/Swipper/SwiperDetail";
 import RecommendGood from "../page/Home/Recommend";
 import Login from "../page/Login/Login";
 import Register from "../page/Login/Register";
@@ -15,6 +16,7 @@ import EditAddress from "../page/My/UserInfo/Address/Edit";
 import HelpCenter from "../page/My/HelpCenter";
 import FootPrint from "../page/My/FootPrint";
 import HelpPage from "../page/My/HelpCenter/HelpPage";
+import Coupon from "../page/My/Coupon";
 import GoodGoods from "../page/GoodGoods";
 import MyHeartList from "../page/GoodGoods/MyHeartList";
 import GoodGoodsList from "../page/GoodGoods/GoodGoodsList";
@@ -35,8 +37,6 @@ import CategoryGoods from "../page/Category/CategoryGoods";
 import Setting from "../page/My/Setting";
 import CheckPriceGoods from "../page/My/CheckedPriceGoods";
 import FavoriteGoods from "../page/My/FavoriteGoods";
-// 测试页面
-import Animated from "../demo/animated";
 
 export default (AppNavigator = StackNavigator(
   {
@@ -129,6 +129,10 @@ export default (AppNavigator = StackNavigator(
     HelpCenter: {
       screen: HelpCenter
     },
+    // 优惠卷
+    Coupon: {
+      screen: Coupon
+    },
     // 我的足迹
     FootPrint: {
       screen: FootPrint
@@ -149,9 +153,6 @@ export default (AppNavigator = StackNavigator(
     Setting: {
       screen: Setting
     },
-    // CustomKeyPage:{
-    //     screen: CustomKeyPage
-    // },
     GoodsDetail: {
       screen: GoodsDetail
     },
@@ -169,6 +170,10 @@ export default (AppNavigator = StackNavigator(
     NewGood: {
       screen: NewGood
     },
+    // 首页轮播图详情页面
+    SwiperDetail: {
+      screen: SwiperDetail
+    },
     // 登陆页面
     Login: {
       screen: Login
@@ -176,10 +181,6 @@ export default (AppNavigator = StackNavigator(
     // 注册页面
     Register: {
       screen: Register
-    },
-    // 测试页面
-    Animated: {
-      screen: Animated
     }
   },
   {

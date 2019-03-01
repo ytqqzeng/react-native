@@ -1,5 +1,5 @@
 /**
- * 个人中心订单页 包含各种状态的订单
+ * Sample React Native App
  * https://github.com/facebook/react-native
  *
  * @format
@@ -20,10 +20,11 @@ import {
   Alert
 } from "react-native";
 import dayjs from "dayjs";
-import OneGoods from "./oneGoods";
+
 import { scaleSize, setSpText2 } from "../../../util/screenUtil";
 import CountDown from "./CountDown";
 import Order from "../../../models/order";
+import User from "../../../models/user";
 import ScrollableTabView, {
   ScrollableTabBar
 } from "react-native-scrollable-tab-view";
@@ -50,14 +51,16 @@ const status2Word = [
   "订单取消了",
   "完成订单"
 ];
-// 通过参数过滤数组
-const filterArray = arg => item => item.status === arg;
-class OrderType extends Component {
+export default class OneGoods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openRest: false,
-      orderListData: []
+      showDetail: false,
+      expressFee: 0, // 快递
+      viewed_cost: 0, //
+      advance: 0,
+      totalMoney: 0,
+      advanceCount: 0 // 使用多少之前的预存款
     };
   }
   /**
@@ -161,12 +164,44 @@ class OrderType extends Component {
     );
   };
   _openOrderDetail = () => {
-    console.warn("2::", 2);
-    this.setState({
-      openRest: true
-    });
+    const { order_id, need_pay_money } = this.props.item;
+    const { member_id } = this.props.userInfo;
+    const { showDetail, totalMoney } = this.state;
+    if (showDetail) {
+      this.setState({
+        showDetail: false,
+        totalMoney: need_pay_money
+      });
+    } else {
+      this.setState({
+        showDetail: true
+      });
+      const params = {
+        member_id,
+        order_id
+      };
+
+      User.getUserOrderFee(params).then(res => {
+        // 点开详细尾款 初始化数据
+        if (res.result == 1) {
+          this.setState({
+            expressFee: res.data.ship_price,
+            viewed_cost: res.data.viewed_cost,
+            advance: res.data.advance,
+            totalMoney: totalMoney + res.data.ship_price - res.data.viewed_cost
+          });
+        }
+      });
+    }
   };
+  componentDidMount() {
+    const { need_pay_money } = this.props.item;
+    this.setState({
+      totalMoney: need_pay_money
+    });
+  }
   orderPrice = (need_pay_money, flag) => {
+    const { totalMoney } = this.state;
     return (
       <View
         style={{
@@ -178,11 +213,19 @@ class OrderType extends Component {
       >
         <Text style={styles.redText}>订单合计：</Text>
         <View style={{ flexDirection: "row" }}>
-          <Text style={styles.grayText}>¥{need_pay_money}</Text>
+          <Text style={[styles.grayText, { width: 80 }]}>¥{totalMoney}</Text>
           {flag ? (
             <Text
               onPress={this._openOrderDetail}
-              style={{ fontSize: setSpText2(12), color: "#999" }}
+              style={{
+                fontSize: setSpText2(12),
+                color: "#FFF",
+                paddingHorizontal: 5,
+                borderWidth: 1,
+                marginLeft: 10,
+                borderRadius: 3,
+                backgroundColor: "#FC6969"
+              }}
             >{`尾款详细`}</Text>
           ) : null}
         </View>
@@ -261,6 +304,7 @@ class OrderType extends Component {
     const { dispatch } = this.props;
     const { member_id } = this.props.userInfo;
     Order.cancelOrder(params).then(res => {
+      console.warn("res::", res);
       if (res.result == 1) {
         Alert.alert(
           "取消订单",
@@ -305,14 +349,158 @@ class OrderType extends Component {
       }
     });
   };
+  _btn = () => {
+    return (
+      <Text
+        onPress={() => {
+          this._payRest();
+        }}
+        style={styles.operateBtn}
+      >
+        支付尾款
+      </Text>
+    );
+  };
+  _payRest = () => {
+    const { order_id } = this.props.item;
+    const { navigation } = this.props;
+    const { member_id } = this.props.userInfo;
+    const { totalMoney } = this.state;
+
+    navigation.navigate("OrderPay", {
+      price: totalMoney,
+      order_id,
+      member_id,
+      isPrepay: false
+    });
+  };
+  //   渲染尾款内容
   _payRestMoney = () => {
     return (
       <View>
-        <Text>2</Text>
+        {this._expressFee()}
+        {this._viewedCost()}
+        {this._advance()}
+        {this._btn()}
       </View>
     );
   };
-  _renderItem = ({ item }) => {
+  /**
+   * 快递费
+   */
+  _expressFee = () => {
+    const { expressFee } = this.state;
+    return (
+      <View style={styles.panel}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderColor: "#eee",
+            borderBottomWidth: 1,
+            paddingVertical: scaleSize(5)
+          }}
+        >
+          <Text style={[styles.text, {}]}>快递费：</Text>
+          <Text style={[styles.text, {}]}>{`+${expressFee}元`}</Text>
+        </View>
+      </View>
+    );
+  };
+  /**
+   * 查看价格的花费
+   */
+  _viewedCost = () => {
+    const { viewed_cost } = this.state;
+    return (
+      <View style={styles.panel}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderColor: "#eee",
+            borderBottomWidth: 1,
+            paddingVertical: scaleSize(5)
+          }}
+        >
+          <Text style={[styles.text, {}]}>抵扣查看价格花费：</Text>
+          <Text style={[styles.text, {}]}>{`-${viewed_cost}元`}</Text>
+        </View>
+      </View>
+    );
+  };
+  /**
+   * 预存款 之前查看价格积累的金额
+   */
+  _advance = () => {
+    const { expressFee, viewed_cost, advance } = this.state;
+    const { item } = this.props;
+    return (
+      <View style={styles.panel}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            borderColor: "#eee",
+            borderBottomWidth: 1,
+            paddingVertical: scaleSize(5)
+          }}
+        >
+          <Text style={[styles.text, {}]}>{`可用预存款共计${advance}元`}</Text>
+          <TextInput
+            keyboardType="numeric"
+            placeholder={"使用多少"}
+            style={[
+              styles.text,
+              {
+                borderWidth: 1,
+                marginLeft: scaleSize(10),
+                borderColor: "#DDD"
+              }
+            ]}
+            onChangeText={advanceCount => {
+              var newText2;
+              const newText = advanceCount.replace(/[^\d]+/, "");
+              //   当前默认价格
+              const defaultCost =
+                item.need_pay_money + expressFee - viewed_cost;
+
+              // 当输入的值超过自己拥有的预存款
+              if (newText > advance) {
+                newText2 = newText.replace(/[\d]+/, "");
+                this.setState({
+                  advanceCount: newText2,
+                  totalMoney:
+                    item.need_pay_money + expressFee - viewed_cost - newText2
+                });
+                return;
+              }
+              // 当输入的值超过自己目前商品的价格
+              if (newText > defaultCost) {
+                alert("超多最多抵扣限额");
+                newText2 = newText.replace(/[\d]+/, "");
+                this.setState({
+                  advanceCount: newText2,
+                  totalMoney:
+                    item.need_pay_money + expressFee - viewed_cost - newText2
+                });
+                return;
+              }
+              this.setState({
+                advanceCount: newText,
+                totalMoney:
+                  item.need_pay_money + expressFee - viewed_cost - newText
+              });
+            }}
+            value={this.state.advanceCount}
+          />
+        </View>
+      </View>
+    );
+  };
+  render() {
     const {
       create_time,
       status,
@@ -322,15 +510,15 @@ class OrderType extends Component {
       goods,
       goods_amount,
       discount
-    } = item;
+    } = this.props.item;
     const rate = need_pay_money / goods_amount;
 
     var paystatus, flag; // flag区别是否是尾款
     if (rate === 0.1 && discount === 0) {
-      paystatus = <Text style={styles.grayText}>定金待支付</Text>;
+      paystatus = <Text style={styles.grayText}>未支付定金</Text>;
       var isPrepay = 1; //表示isPrePay = true ,支付页面好区分使用那个接口
     } else if (rate === 0.9 && discount === 0) {
-      paystatus = <Text style={styles.grayText}>定金已支付</Text>;
+      paystatus = <Text style={styles.grayText}>已支付定金</Text>;
       var isPrepay = 0;
       flag = true;
     } else {
@@ -362,7 +550,7 @@ class OrderType extends Component {
           {this._orderImg(items_json, goods)}
           {/* 订单价格 */}
           {this.orderPrice(need_pay_money, flag)}
-          {this._payRestMoney()}
+          {this.state.showDetail ? this._payRestMoney() : null}
           {/* 倒计时 */}
           {status === 1 ? this._countDown(orderEndTime) : null}
           {/* 操作按钮 */}
@@ -376,39 +564,13 @@ class OrderType extends Component {
             {status === 4
               ? this._rateOrderBtn(items_json, goods, order_id)
               : null}
-            {/* {this._rateOrderBtn(items_json, goods)} */}
           </View>
         </View>
       </View>
     );
-  };
-
-  render() {
-    const { orderList, userInfo } = this.props;
-    const { type } = this.props;
-    var orderListData = orderList.orderList.filter(filterArray(type));
-    if (type === 9) {
-      orderListData = orderList.orderList;
-    }
-    return (
-      <View style={styles.container}>
-        <ScrollView>
-          {/* <FlatList data={orderListData} renderItem={this._renderItem} /> */}
-          {orderListData.map(item => {
-            return <OneGoods item={item} {...this.props} />;
-          })}
-        </ScrollView>
-      </View>
-    );
   }
 }
-const mapStateToProps = state => {
-  return {
-    userInfo: state.user.userInfo,
-    orderList: state.order
-  };
-};
-export default connect(mapStateToProps)(OrderType);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -420,6 +582,7 @@ const styles = StyleSheet.create({
   },
   grayText: {
     fontSize: setSpText2(12),
+
     color: "#999"
   },
   orderDate: {
@@ -457,5 +620,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: scaleSize(5),
     marginHorizontal: 2
+  },
+  text: {
+    color: "#777",
+    fontSize: setSpText2(13),
+    paddingVertical: scaleSize(3)
+  },
+  panel: {
+    paddingVertical: scaleSize(8),
+    paddingHorizontal: scaleSize(15),
+    backgroundColor: "#fff"
   }
 });

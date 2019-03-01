@@ -26,9 +26,9 @@ class FavoriteGoods extends Component {
   }
   _renderItemView = ({ item, index }) => {
     const { navigation } = this.props;
+    // console.warn("navigaiton::", navigation);
     return (
       <GoodsCell
-        // isCheckedPriceGoods={true}
         item={item}
         index={index}
         navigation={navigation}

@@ -19,11 +19,44 @@ export default class Order {
     });
   }
   /**
+   * 订单状态改为 支付成功
+   * @param {} params
+   */
+  static orderStatusSuccess(params = { goods_id, member_id }) {
+    return Fetch.fetchGet(OrderApi.orderStatusSuccess, params).catch(error => {
+      console.warn("error::修改订单状态报错", error);
+      return false;
+    });
+  }
+  /**
+   * 正常购买支付
+   * @param {} params
+   */
+  static changeOrderToSuccess(params = { goods_id, member_id }) {
+    return Fetch.fetchGet(OrderApi.changeOrderToSuccess, params).catch(
+      error => {
+        console.warn("error::修改订单状态报错", error);
+        return false;
+      }
+    );
+  }
+  /**
+   * 支付定金
+   * @param {} params
+   */
+  static prePaySuccess(params = { goods_id, member_id }) {
+    return Fetch.fetchGet(OrderApi.prePaySuccess, params).catch(error => {
+      console.warn("error::修改订单状态报错", error);
+      return false;
+    });
+  }
+  /**
    * 创建订单
    * @param {*} param0
    */
   static createOrder({
     goods_id,
+    prepay,
     member_id,
     product_id,
     shipping_area, //省市区拼接在一起的字符串
@@ -40,6 +73,9 @@ export default class Order {
     formdata.append("member_id", member_id);
     if (product_id) {
       formdata.append("product_id", Number(product_id));
+    }
+    if (prepay) {
+      formdata.append("prepay", Number(prepay));
     }
     formdata.append("shipping_area", shipping_area);
     formdata.append("ship_name", ship_name);
@@ -129,6 +165,31 @@ export default class Order {
         console.warn("e::", e);
         console.warn("出错");
         return null;
+      });
+  }
+  /**
+   * 提交评价图片
+   * @param {*} img
+   */
+  static uploadRateImg(img) {
+    let formData = new FormData();
+    let file = { uri: img, type: "multipart/form-data", name: "image.png" };
+    formData.append("file", file);
+    return fetch(OrderApi.uploadRateImg.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      body: formData
+    })
+      .then(response => response.text())
+      .then(responseData => {
+        console.warn("responseData::", responseData);
+        var responseData = JSON.parse(responseData);
+        return responseData;
+      })
+      .catch(error => {
+        console.warn("error", error);
       });
   }
 }

@@ -139,6 +139,16 @@ export default class User {
         console.warn("更新出错");
       });
   }
+  /**
+   * 获取用户的优惠卷
+   * @param {*} param
+   */
+  static getUserCoupon(param) {
+    return Fetch.fetchGet(UserApi.getUserCoupon, param).catch(error => {
+      console.warn("error::错误", error);
+      return false;
+    });
+  }
 
   // async register(params) {
   //     try {

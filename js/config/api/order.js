@@ -26,5 +26,25 @@ export const OrderApi = {
   updateAndvance: {
     url: `${ROOT_URL}shop/api/shop/member-ext/update-advance.do`,
     method: "GET"
+  },
+  orderStatusSuccess: {
+    url: `${ROOT_URL}shop/api/shop/order-ext/change-order-status.do`,
+    method: "GET"
+  },
+  //   正常购买 支付订单
+
+  changeOrderToSuccess: {
+    url: `${ROOT_URL}shop/api/shop/order-ext/pay.do`,
+    method: "GET"
+  },
+  //   定金支付
+
+  prePaySuccess: {
+    url: `${ROOT_URL}shop/api/shop/order-ext/prepay.do`,
+    method: "GET"
+  },
+  uploadRateImg: {
+    url: `${ROOT_URL}shop/eop/upload/upload-img.do?subFolder=comment`,
+    method: "POST"
   }
 };

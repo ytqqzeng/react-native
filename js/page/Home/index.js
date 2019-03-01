@@ -22,7 +22,7 @@ import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import ScrollableTabView, {
   ScrollableTabBar
 } from "react-native-scrollable-tab-view";
-import NewGood from "./NewGood";
+import NewGood from "./NewGoods";
 import RecommendGood from "./Recommend";
 
 const URL = "https://api.github.com/search/repositories?q=";

@@ -13,6 +13,7 @@ import {
 import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
 import Goods from "../../../models/goods";
 import { Label } from "../../../common/Label";
+import FnUtils from "../../../util/fnUtils";
 import StorageUtil, { StorageKey } from "../../../models/StorageModel";
 import { connect } from "react-redux";
 const { width } = Dimensions.get("window");
@@ -158,7 +159,7 @@ class RecommendGood extends Component {
         >
           <View style={{ marginRight: scaleSize(5) }}>
             <Image
-              source={{ uri: item.original }}
+              source={{ uri: FnUtils.getOriginalImg(item.original, "goods") }}
               style={{ width: scaleSize(150), height: scaleHeight(150) }}
             />
           </View>

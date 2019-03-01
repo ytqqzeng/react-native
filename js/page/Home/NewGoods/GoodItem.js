@@ -8,8 +8,9 @@
 
 import React, { Component } from "react";
 import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
-import { Label } from ".././../common/Label";
-import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
+import { Label } from ".././../../common/Label";
+import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
+import FnUtils from "../../../util/fnUtils";
 export default class GoodItem extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,6 @@ export default class GoodItem extends Component {
   render() {
     const navigation = this.props.navigation;
     let { name, original, is_viewed_price, mktprice } = this.props.info;
-
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -34,7 +34,7 @@ export default class GoodItem extends Component {
           <View>
             <Image
               style={styles.pic}
-              source={{ uri: original }}
+              source={{ uri: FnUtils.getOriginalImg(original, "goods") }}
               resizeMode={"contain"}
             />
           </View>

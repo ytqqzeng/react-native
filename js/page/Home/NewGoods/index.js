@@ -18,14 +18,15 @@ import {
   View,
   ScrollView
 } from "react-native";
-import Goods from "../../models/goods";
-import Swipper from "../../common/Swipper";
-import CuttingLine from "../../common/CuttingLine";
+import Goods from "../../../models/goods";
+import Swipper from "./Swipper";
+import CuttingLine from "../../../common/CuttingLine";
 import GoodItem from "./GoodItem";
 import ThemeRecommend from "./ThemeRecommend";
+import FnUtils from "../../../util/fnUtils";
 
-import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
-import StorageUtil, { StorageKey } from "../../models/StorageModel";
+import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
+import StorageUtil, { StorageKey } from "../../../models/StorageModel";
 import { connect } from "react-redux";
 class NewGood extends Component {
   constructor(props) {
@@ -54,23 +55,34 @@ class NewGood extends Component {
   _updateData = () => {
     const { member_id } = this.props.userInfo;
     console.warn("member_idttt::", member_id);
-    // swipper的数据
-    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+    // swipper的图片数据
+    Goods.activityBannerImg().then(res => {
       if (res.result == 1) {
         this.setState({
           swipperArray: res.data
         });
 
-        StorageUtil.SetStorage(StorageKey.swipperGoods, res.data);
+        // StorageUtil.SetStorage(StorageKey.swipperGoods, res.data);
       }
     });
+
+    // Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+    //   if (res.result == 1) {
+    //     this.setState({
+    //       swipperArray: res.data
+    //     });
+
+    //     StorageUtil.SetStorage(StorageKey.swipperGoods, res.data);
+    //   }
+    // });
     // 新品的数据
-    Goods.goodSearch({ keyword: "女", member_id }).then(res => {
+    Goods.getLatestGoods({ member_id }).then(res => {
       if (res.result == 1) {
+        const data = res.data.slice(0, 5); // 限制数量
         this.setState({
-          newGoodsDate: res.data
+          newGoodsDate: data
         });
-        StorageUtil.SetStorage(StorageKey.newGoods, res.data);
+        StorageUtil.SetStorage(StorageKey.newGoods, data);
       }
     });
     // 你的风格 商品
@@ -130,7 +142,7 @@ class NewGood extends Component {
               data={this.state.swipperArray}
               isShowText={false}
               {...this.props}
-              updateData={this._updateData}
+              //   updateData={this._updateData}
             />
           </View>
           <View
@@ -170,7 +182,9 @@ class NewGood extends Component {
                       }}
                     >
                       <Image
-                        source={{ uri: item.original }}
+                        source={{
+                          uri: FnUtils.getOriginalImg(item.original, "goods")
+                        }}
                         style={{
                           width: scaleSize(100),
                           height: scaleHeight(100),

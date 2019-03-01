@@ -16,9 +16,12 @@ import {
   TouchableOpacity
 } from "react-native";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
+import FnUtils from "../../util/fnUtils";
 import Avartar from "../../common/avatar";
 import { Header } from "../../common/Header";
 import { StorageKey } from "../../models/StorageModel";
+import Goods from "../../models/goods";
+import StarScore from "./StarScore";
 
 /**
  * 商品推荐人的板块信息
@@ -29,36 +32,7 @@ export default class GoodsAuthor extends Component {
     this.state = {
       isMoreNotes: false, // 查看更多流言
       isFollow: false, // 是否点击关注
-      authorInfo: {
-        avatarUrl:
-          "https://gd1.alicdn.com/imgextra/i4/791105148/O1CN01uVEr3b1ntpQGtz8Cg_!!791105148.jpg_400x400.jpg",
-        avatarName: "哆啦咪",
-        authorDescrip: "用美好的事物包围自己，善待此生",
-
-        note: [
-          {
-            avatarName: "米拉",
-            avatarUrl:
-              "https://gd1.alicdn.com/imgextra/i4/791105148/O1CN01uVEr3b1ntpQGtz8Cg_!!791105148.jpg_400x400.jpg",
-            words: "产品很不错，下次再来买,产品很不错，下次再来买",
-            stars: 240
-          },
-          {
-            avatarName: "叶子节点",
-            avatarUrl:
-              "https://gd1.alicdn.com/imgextra/i4/791105148/O1CN01uVEr3b1ntpQGtz8Cg_!!791105148.jpg_400x400.jpg",
-            words: "产品很不错，下次再来买",
-            stars: 200
-          },
-          {
-            avatarName: "米拉",
-            avatarUrl:
-              "https://gd1.alicdn.com/imgextra/i4/791105148/O1CN01uVEr3b1ntpQGtz8Cg_!!791105148.jpg_400x400.jpg",
-            words: "产品很不错，下次再来买,产品很不错，下次再来买",
-            stars: 220
-          }
-        ]
-      }
+      commentsArray: []
     };
   }
   // 切换关注状态
@@ -88,7 +62,7 @@ export default class GoodsAuthor extends Component {
       >
         <Image
           resizeMode={"contain"}
-          source={{ uri: item.original }}
+          source={{ uri: FnUtils.getOriginalImg(item.original, "goods") }}
           style={{ height: scaleSize(120), width: scaleSize(120) }}
         />
       </TouchableOpacity>
@@ -115,45 +89,24 @@ export default class GoodsAuthor extends Component {
       </View>
     );
   };
-  // 全部留言
-  _notes = data => {
-    if (!this.state.isMoreNotes) {
-      data = data.slice(0, 2);
-    }
-    return (
-      <View style={[styles.notes, { paddingLeft: 20, paddingRight: 20 }]}>
-        <FlatList
-          data={data}
-          keyExtractor={(item, index) => item.goodsId}
-          renderItem={this._noteItem}
-        />
-      </View>
-    );
-  };
+
   _noteItem = ({ item }) => {
+    const { content, face, uname, grade } = item;
+
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
         <View style={styles.notesAvartar}>
           <Avartar
-            avatarName={item.avatarName}
-            avatarUrl={item.avatarUrl}
+            avatarName={uname}
+            avatarUrl={face}
             size={{ width: scaleSize(25), height: scaleSize(25) }}
           />
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image
-              source={require("../../../res/image/praise.png")}
-              style={{
-                width: scaleSize(14),
-                height: scaleSize(14),
-                tintColor: "#333",
-                marginRight: 5
-              }}
-            />
-            <Text>{item.stars}</Text>
+            <StarScore currentScore={grade} />
           </View>
         </View>
         <View style={styles.noteDetail}>
-          <Text style={styles.noteText}>{item.words}</Text>
+          <Text style={styles.noteText}>{content}</Text>
         </View>
       </View>
     );
@@ -180,15 +133,34 @@ export default class GoodsAuthor extends Component {
       </View>
     );
   };
+  componentDidMount() {
+    const goods_id = this.props.goods_id;
+    if (goods_id) {
+      Goods.getComments({ goods_id }).then(res => {
+        this.setState({
+          commentsArray: res.data
+        });
+      });
+    }
+  }
+  _commentItem = data => {
+    return (
+      <View style={[styles.notes, { paddingLeft: 20, paddingRight: 20 }]}>
+        <FlatList
+          data={data}
+          keyExtractor={(item, index) => item.goodsId}
+          renderItem={this._noteItem}
+        />
+      </View>
+    );
+  };
   render() {
-    let { avatarUrl, avatarName, authorDescrip, note } = this.state.authorInfo;
     const { recommend } = this.props;
-
+    const { commentsArray } = this.state;
     return (
       <View style={styles.container}>
         {this._noteTitle()}
-        {this._notes(note)}
-        {this._moreNote()}
+        {this._commentItem(commentsArray)}
         {this._recommendDetail(recommend)}
       </View>
     );

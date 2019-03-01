@@ -13,6 +13,10 @@ export default class SkuGoods extends Component {
   };
   _productAndSpecObj = data => {
     var a = {};
+    if (!Array.isArray(data)) {
+      console.warn("商品上传参数specs有误");
+      return;
+    }
     data.forEach(item => {
       a[item.specs] = item.product_id;
     });

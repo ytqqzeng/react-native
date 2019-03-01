@@ -20,14 +20,14 @@ import {
 import { scaleSize, setSpText2 } from "../../util/screenUtil";
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
-export default class OrderPayed extends Component {
+import { connect } from "react-redux";
+class OrderPayed extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
   _renderHead = () => {
-    const { navigation } = this.props;
-    console.warn("navigation::", navigation);
+    const { navigation, userInfo } = this.props;
     const { flag, price } = navigation.state.params;
     const payedType = flag === "weixin" ? "微信支付" : "支付宝支付";
     return (
@@ -123,18 +123,18 @@ export default class OrderPayed extends Component {
     );
   };
   render() {
-    const { navigation } = this.props;
-
+    const { navigation, userInfo } = this.props;
+    console.warn("userInfo::", userInfo);
     return (
       <View style={styles.container}>
         <NavigationBar
           title={"订单支付成功"}
           statusBar={{ backgroundColor: "steelblue", hidden: true }}
           leftButton={ViewUtils.getLeftButton(() => {
-            navigation.goBack(null);
+            navigation.goBack(userInfo.pageKey);
           })}
           rightButton={ViewUtils.getSubmitButton("完成", () => {
-            // navigation.navigate("OrderPage");
+            navigation.navigate("HomePage");
           })}
         />
         <FlatList
@@ -159,6 +159,12 @@ export default class OrderPayed extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    userInfo: state.user.userInfo
+  };
+};
+export default connect(mapStateToProps)(OrderPayed);
 
 const styles = StyleSheet.create({
   container: {

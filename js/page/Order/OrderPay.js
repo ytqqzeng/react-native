@@ -19,7 +19,9 @@ import {
 import { scaleSize, setSpText2 } from "../../util/screenUtil";
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
-export default class OrderPay extends Component {
+import Order from "../../models/order";
+import { connect } from "react-redux";
+class OrderPay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,8 +29,32 @@ export default class OrderPay extends Component {
       paying: "正在支付...."
     };
   }
+  _changeStatus = (order_id, payment_name) => {
+    const { member_id, price, isPrepay } = this.props.navigation.state.params;
+    if (isPrepay) {
+      const params = { order_id, member_id };
+
+      Order.prePaySuccess(params).then(res => {
+        if (res.result === 1) {
+          console.warn(":定金支付成功:");
+        } else {
+          console.warn(":定金支付失败:");
+        }
+      });
+    } else {
+      const params = { order_id, member_id, pay_money: price, payment_name };
+
+      Order.changeOrderToSuccess(params).then(res => {
+        if (res.result === 1) {
+          console.warn(":全额支付成功 切换订单状态成功:");
+        } else {
+          console.warn(":切换订单状态失败:");
+        }
+      });
+    }
+  };
   _submit = () => {
-    const { price } = this.props.navigation.state.params;
+    const { price, order_id } = this.props.navigation.state.params;
     const { flag } = this.state;
     if (flag === "weixin") {
       this.setState(
@@ -37,6 +63,7 @@ export default class OrderPay extends Component {
         },
         () => {
           setTimeout(() => {
+            this._changeStatus(order_id, "微信");
             this.props.navigation.navigate("OrderPayed", {
               flag: "weixin",
               price
@@ -50,6 +77,7 @@ export default class OrderPay extends Component {
           flag: this.state.paying
         },
         () => {
+          this._changeStatus(order_id, "支付宝");
           setTimeout(() => {
             this.props.navigation.navigate("OrderPayed", {
               flag: "zhifubao",
@@ -64,7 +92,7 @@ export default class OrderPay extends Component {
     }
   };
   render() {
-    const { navigation } = this.props;
+    const { navigation, userInfo } = this.props;
     const { price } = navigation.state.params;
     const { flag } = this.state;
     let payName;
@@ -82,7 +110,7 @@ export default class OrderPay extends Component {
           title={"收银台"}
           statusBar={{ backgroundColor: "steelblue", hidden: true }}
           leftButton={ViewUtils.getLeftButton(() => {
-            navigation.goBack(null);
+            navigation.goBack(userInfo.pageKey);
           })}
           rightButton={ViewUtils.getSubmitButton("订单中心", () => {
             navigation.navigate("OrderPage");
@@ -194,7 +222,12 @@ export default class OrderPay extends Component {
     );
   }
 }
-
+const mapStateToProps = state => {
+  return {
+    userInfo: state.user.userInfo
+  };
+};
+export default connect(mapStateToProps)(OrderPay);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

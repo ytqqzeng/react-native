@@ -30,6 +30,13 @@ export const updateUserInfo = json => {
     userInfo: json
   };
 };
+// 设置进入详情页面之前那个页面的key 以便以后可以在支付成功以后跳回去
+export const setPageKey = json => {
+  return {
+    type: types.user.SET_PAGE_KEY,
+    userInfo: json
+  };
+};
 
 // 可以异步的action
 export const asyncLoging = ({ username, password }) => {

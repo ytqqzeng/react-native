@@ -1,5 +1,6 @@
 import types from "../../constants";
 import Goods from "../../models/goods";
+import FnUtils from "../../util/fnUtils";
 import StorageUtil, { StorageKey } from "../../models/StorageModel";
 
 /**
@@ -21,7 +22,7 @@ export const asyncCheckPriceGoods = ({ uname }) => {
       if (res.result == 1) {
         StorageUtil.SetStorage(StorageKey.checkedPriceGoods, res.data);
         const imgArray = res.data.map(item => {
-          return item.original;
+          return FnUtils.getOriginalImg(item.original, "goods");
         });
         dispatch(checkPriceGoods(imgArray));
       }
@@ -46,7 +47,7 @@ export const asyncFavoriteGoods = ({ uname }) => {
       if (res.result == 1) {
         StorageUtil.SetStorage(StorageKey.favoriteGoods, res.data);
         const imgArray = res.data.map(item => {
-          return item.original;
+          return FnUtils.getOriginalImg(item.original, "goods");
         });
         dispatch(favoriteGoods(imgArray));
       }

@@ -20,7 +20,8 @@ export const StorageKey = {
   searchHistory: "SEARCH_HISTORY", // 搜索历史
   styleGoods: "STYLE_GOODS", // 你的风格商品
   favoriteGoods: "FAVORITE_GOODS", // 收藏的商品
-  myHeartList: "MYHEARTLIST" // 好物 心动列表
+  myHeartList: "MYHEARTLIST", // 好物 心动列表
+  subject_goods: "SUBJECT_GOODS"
 };
 export default class StorageUtil {
   static removeSearchHistory(data) {

@@ -14,6 +14,7 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
+  Alert,
   View
 } from "react-native";
 import { scaleSize, setSpText2, scaleHeight } from "../../../util/screenUtil";
@@ -131,7 +132,7 @@ export default class OrderRate extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            //   规定只能上传一张图片
+            // 规定只能上传一张图片
             if (imgUriArr.length > 0) return;
             ImagePicker.showImagePicker(options, response => {
               if (response.error) {
@@ -165,30 +166,64 @@ export default class OrderRate extends Component {
       </View>
     );
   };
+  _submit_go = params => {
+    const { navigation } = this.props;
+    const { order_id, member_id } = this.props.navigation.state.params;
+    Order.rateOrder(params).then(res => {
+      this.refs.toast.close();
+      if (res.result === 1) {
+        const params2 = { order_id, status: 5 };
+        Order.orderStatusSuccess(params2).then(res2 => {
+          if (res2.result === 1) {
+            Alert.alert(
+              "评价",
+              "评价成功",
+              [
+                {
+                  text: "关闭",
+                  onPress: () => navigation.navigate("OrderPage")
+                }
+              ],
+              { cancelable: false }
+            );
+            dispatch(asyncUserOrderList({ member_id }));
+          } else {
+            console.warn(":切换订单状态失败:");
+          }
+        });
+      } else {
+        console.warn("失败:", res.message);
+      }
+    });
+  };
   _submit = param => {
     const { currentScore, content, imgUriArr } = this.state;
-    const params = {
+    const img = imgUriArr.join();
+    var params = {
       ...param,
       content,
       grade: currentScore,
-      img: imgUriArr.join()
+      img
     };
-    if (content) {
-      this.refs.toast.show("提交中~", 10000);
-      Order.rateOrder(params).then(res => {
-        this.refs.toast.close();
-        if (res.result === 1) {
-        } else {
-          alert("失败:", res.message);
+
+    if (content && img) {
+      this.refs.toast.show("提交中~", 5000);
+      Order.uploadRateImg(img).then(res => {
+        if (res.state === "SUCCESS") {
+          params = { ...params, img: res.original };
+          this._submit_go(params);
         }
       });
+    } else if (content && !img) {
+      this._submit_go(params);
     } else {
       this.refs.toast.show("至少输入一个字哦~!", 800);
     }
   };
   render() {
     const { navigation } = this.props;
-    const { _img, member_id, _goods_id } = navigation.state.params;
+    const { _img, member_id, _goods_id, order_id } = navigation.state.params;
+    console.warn("_goods_id::", _goods_id);
 
     return (
       <View style={styles.container}>
