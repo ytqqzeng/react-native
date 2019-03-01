@@ -57,7 +57,8 @@ class OrderType extends Component {
     super(props);
     this.state = {
       openRest: false,
-      orderListData: []
+      orderListData: [],
+      orderListArray: []
     };
   }
   /**
@@ -361,7 +362,7 @@ class OrderType extends Component {
           {/* 订单图片 详细 */}
           {this._orderImg(items_json, goods)}
           {/* 订单价格 */}
-          {this.orderPrice(need_pay_money, flag)}
+          {flag ? null : this.orderPrice(need_pay_money, flag)}
           {this._payRestMoney()}
           {/* 倒计时 */}
           {status === 1 ? this._countDown(orderEndTime) : null}
@@ -382,9 +383,26 @@ class OrderType extends Component {
       </View>
     );
   };
+  componentDidMount() {
+    const { orderList, userInfo, dispatch } = this.props;
+    const { member_id } = userInfo;
+    dispatch(asyncUserOrderList({ member_id }));
+    // console.warn("orderList33::", orderList);
+    // this.setState({
+    //   orderListArray: orderList
+    // });
+  }
+  //   componentWillReceiveProps(nextProps) {
+  //     if (this.props.orderList !== nextProps.orderList) {
+  //       this.setState({
+  //         orderListArray: nextProps.orderList
+  //       });
+  //     }
+  //   }
 
   render() {
     const { orderList, userInfo } = this.props;
+    // const { orderListArray } = this.setState;
     const { type } = this.props;
     var orderListData = orderList.orderList.filter(filterArray(type));
     if (type === 9) {
@@ -392,12 +410,20 @@ class OrderType extends Component {
     }
     return (
       <View style={styles.container}>
-        <ScrollView>
-          {/* <FlatList data={orderListData} renderItem={this._renderItem} /> */}
-          {orderListData.map(item => {
-            return <OneGoods item={item} {...this.props} />;
-          })}
-        </ScrollView>
+        {/* <ScrollView> */}
+        <FlatList
+          data={[{ key: "a" }]}
+          renderItem={({ item }) => <Text>{null}</Text>}
+          ListHeaderComponent={() => {
+            return orderListData.map(item => {
+              return <OneGoods item={item} {...this.props} />;
+            });
+          }}
+        />
+        {/* {orderListData.map(item => {
+          return <OneGoods item={item} {...this.props} />;
+        })} */}
+        {/* </ScrollView> */}
       </View>
     );
   }

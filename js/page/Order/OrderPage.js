@@ -24,6 +24,7 @@ class OrderPage extends Component {
     super(props);
     this.state = {};
   }
+
   componentDidMount() {
     const { dispatch, userInfo, navigation } = this.props;
     const pageKey = navigation.state.key;

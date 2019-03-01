@@ -20,12 +20,17 @@ import {
 import { scaleSize, setSpText2 } from "../../util/screenUtil";
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
+import { asyncUserOrderList } from "../../actions/order";
 import { connect } from "react-redux";
 class OrderPayed extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+  //   componentDidMount(){
+  //     const { navigation, userInfo } = this.props;
+  //     const { flag, price } = navigation.state.params;
+  //   }
   _renderHead = () => {
     const { navigation, userInfo } = this.props;
     const { flag, price } = navigation.state.params;
@@ -122,9 +127,16 @@ class OrderPayed extends Component {
       </View>
     );
   };
-  render() {
+  componentDidMount() {
     const { navigation, userInfo } = this.props;
-    console.warn("userInfo::", userInfo);
+    this.setState({
+      navigation,
+      userInfo
+    });
+  }
+  render() {
+    const { navigation, userInfo } = this.state;
+    console.warn("userInfo5555::", userInfo);
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -137,31 +149,15 @@ class OrderPayed extends Component {
             navigation.navigate("HomePage");
           })}
         />
-        <FlatList
-          ListHeaderComponent={this._renderHead}
-          data={[
-            { key: "." }
-            // { key: "b" },
-            // { key: "c" },
-            // { key: "d" },
-            // { key: "e" },
-            // { key: "f" },
-            // { key: "g" },
-            // { key: "e" },
-            // { key: "f" },
-            // { key: "g" }
-          ]}
-          renderItem={({ item }) => (
-            <Text style={{ fontSize: 50 }}>{item.key}</Text>
-          )}
-        />
+        <View>{this._renderHead()}</View>
       </View>
     );
   }
 }
 const mapStateToProps = state => {
   return {
-    userInfo: state.user.userInfo
+    userInfo: state.user.userInfo,
+    orderList: state.order
   };
 };
 export default connect(mapStateToProps)(OrderPayed);

@@ -14,7 +14,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
-  View
+  View,
+  Alert
 } from "react-native";
 import { scaleSize, setSpText2 } from "../../util/screenUtil";
 import NavigationBar from "../../common/NavigationBar";
@@ -25,20 +26,50 @@ class OrderPay extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      disable: false,
       flag: "weixin", // 默认微信支付选中
       paying: "正在支付...."
     };
   }
   _changeStatus = (order_id, payment_name) => {
     const { member_id, price, isPrepay } = this.props.navigation.state.params;
+    const { flag } = this.state;
+    // console.warn("isPrepay::", isPrepay);
+    // return;
     if (isPrepay) {
       const params = { order_id, member_id };
-
+      //   console.warn("params支付参数::", params);
       Order.prePaySuccess(params).then(res => {
+        console.warn("res定金::", res);
         if (res.result === 1) {
-          console.warn(":定金支付成功:");
+          //   console.warn(":定金支付成功:");
+          this.props.navigation.navigate("OrderPayed", {
+            flag: flag,
+            price
+          });
         } else {
-          console.warn(":定金支付失败:");
+          this.setState({
+            disable: false
+          });
+          console.warn(member_id, price, isPrepay, order_id);
+          //   alert(":定金支付失败:" + order_id);
+          Alert.alert(
+            "Alert Title",
+            ":定金支付失败:" + this.props.navigation.state.params,
+            [
+              {
+                text: "Ask me later",
+                onPress: () => console.log("Ask me later pressed")
+              },
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+          );
         }
       });
     } else {
@@ -46,43 +77,53 @@ class OrderPay extends Component {
 
       Order.changeOrderToSuccess(params).then(res => {
         if (res.result === 1) {
-          console.warn(":全额支付成功 切换订单状态成功:");
+          //   console.warn(":全额支付成功 切换订单状态成功:");
+          this.props.navigation.navigate("OrderPayed", {
+            flag: flag,
+            price
+          });
         } else {
-          console.warn(":切换订单状态失败:");
+          this.setState({
+            disable: false
+          });
+          alert(":支付订单失败:");
         }
       });
     }
   };
   _submit = () => {
     const { price, order_id } = this.props.navigation.state.params;
+
     const { flag } = this.state;
     if (flag === "weixin") {
       this.setState(
         {
-          flag: this.state.paying
+          flag: this.state.paying,
+          disable: true
         },
         () => {
           setTimeout(() => {
             this._changeStatus(order_id, "微信");
-            this.props.navigation.navigate("OrderPayed", {
-              flag: "weixin",
-              price
-            });
+            // this.props.navigation.navigate("OrderPayed", {
+            //   flag: "weixin",
+            //   price
+            // });
           }, 2000);
         }
       );
     } else if (flag === "zhifubao") {
       this.setState(
         {
-          flag: this.state.paying
+          flag: this.state.paying,
+          disable: true
         },
         () => {
           this._changeStatus(order_id, "支付宝");
           setTimeout(() => {
-            this.props.navigation.navigate("OrderPayed", {
-              flag: "zhifubao",
-              price
-            });
+            // this.props.navigation.navigate("OrderPayed", {
+            //   flag: "zhifubao",
+            //   price
+            // });
           }, 2000);
         }
       );
@@ -94,7 +135,7 @@ class OrderPay extends Component {
   render() {
     const { navigation, userInfo } = this.props;
     const { price } = navigation.state.params;
-    const { flag } = this.state;
+    const { flag, disable } = this.state;
     let payName;
     if (flag === "weixin") {
       payName = "微信支付";
@@ -215,6 +256,7 @@ class OrderPay extends Component {
         <View>
           <Text
             onPress={this._submit}
+            disabled={disable}
             style={[styles.text, { backgroundColor: "#FC6969", color: "#FFF" }]}
           >{`${payName}¥${price}`}</Text>
         </View>

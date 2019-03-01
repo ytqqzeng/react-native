@@ -13,7 +13,7 @@ export const userOrderList = json => {
 export const asyncUserOrderList = ({ member_id }) => {
   return dispatch => {
     Order.OrderList({ member_id }).then(res => {
-      console.warn("resppp::", res);
+      //   console.warn("resppp::", res);
       if (res.result == 1) {
         dispatch(userOrderList(res.data));
       }

@@ -31,6 +31,7 @@ class OrderConfirm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      disable: false,
       dataArr: [],
       addr: {}, // 一条地址信息
       address_id: 0, // 地址ID
@@ -57,7 +58,7 @@ class OrderConfirm extends Component {
 
     User.getUserOrderFee(params).then(res => {
       if (res.result == 1) {
-        console.warn("res::", res);
+        // console.warn("res::", res);
         this.setState({
           expressFee: res.data.ship_price,
           viewed_cost: res.data.viewed_cost,
@@ -401,6 +402,10 @@ class OrderConfirm extends Component {
       Alert.alert("未提交", "请添加地址");
       return;
     }
+    this.setState({
+      disable: true
+    });
+
     var params = {
       discount: isPrepay ? 0 : Number(viewed_cost) + Number(advanceCount),
       goods_id,
@@ -419,15 +424,18 @@ class OrderConfirm extends Component {
     Order.createOrder(params).then(res => {
       if (res.result == 1) {
         navigation.navigate("OrderPay", {
-          price: isPrepay ? mktprice * 0.1 : res.data.need_pay_money,
+          price: res.data.need_pay_money,
           order_id: res.data.order_id,
           goods_id,
           member_id,
           isPrepay
         });
       } else {
-        alert("提交订单失败");
+        //alert("提交订单失败");
       }
+      this.setState({
+        disable: false
+      });
     });
   };
 
@@ -437,7 +445,8 @@ class OrderConfirm extends Component {
       expressFee,
       advanceCount,
       addr,
-      viewed_cost
+      viewed_cost,
+      disable
     } = this.state;
 
     const { isPrepay } = goodsData;
@@ -494,8 +503,11 @@ class OrderConfirm extends Component {
             </Text>
           </View>
           <Text
+            ref={"submit"}
+            disabled={disable}
             style={{
               width: scaleSize(150),
+
               textAlign: "center",
               paddingVertical: scaleSize(10),
               backgroundColor: "#FC6969",

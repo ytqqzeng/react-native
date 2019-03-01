@@ -73,7 +73,7 @@ export default class OneGoods extends Component {
   _paySubmit = (status, need_pay_money, order_id, isPrepay) => {
     const { navigation, dispatch } = this.props;
     const { member_id } = this.props.userInfo;
-    console.warn("isPrepay::", isPrepay);
+    // console.warn("isPrepay::", isPrepay);
     if (status === 1) {
       navigation.navigate("OrderPay", {
         price: need_pay_money,
@@ -93,16 +93,6 @@ export default class OneGoods extends Component {
       });
       //   已收货到交易成功
     }
-    // else if (status === 4) {
-    //   const params = { order_id, status: 5 };
-    //   Order.orderStatusSuccess(params).then(res => {
-    //     if (res.result === 1) {
-    //       dispatch(asyncUserOrderList({ member_id }));
-    //     } else {
-    //       console.warn(":切换订单状态失败:");
-    //     }
-    //   });
-    // }
   };
   //   渲染去支付那一块的按钮
   _operateOrder = (status, need_pay_money, order_id, isPrepay) => {
@@ -182,6 +172,7 @@ export default class OneGoods extends Component {
       };
 
       User.getUserOrderFee(params).then(res => {
+        console.warn("费用::", res);
         // 点开详细尾款 初始化数据
         if (res.result == 1) {
           this.setState({
@@ -201,7 +192,7 @@ export default class OneGoods extends Component {
     });
   }
   orderPrice = (need_pay_money, flag) => {
-    const { totalMoney } = this.state;
+    // const { totalMoney } = this.state;
     return (
       <View
         style={{
@@ -211,9 +202,13 @@ export default class OneGoods extends Component {
           borderBottomWidth: 1
         }}
       >
-        <Text style={styles.redText}>订单合计：</Text>
+        {flag ? null : <Text style={styles.redText}>订单合计：</Text>}
         <View style={{ flexDirection: "row" }}>
-          <Text style={[styles.grayText, { width: 80 }]}>¥{totalMoney}</Text>
+          {flag ? null : (
+            <Text style={[styles.grayText, { width: 80 }]}>
+              ¥{need_pay_money}
+            </Text>
+          )}
           {flag ? (
             <Text
               onPress={this._openOrderDetail}
@@ -374,10 +369,19 @@ export default class OneGoods extends Component {
       isPrepay: false
     });
   };
+  _totalPrice = () => {
+    const { totalMoney } = this.state;
+    return (
+      <View style={styles.panel}>
+        <Text style={styles.text}>{`${totalMoney}`}</Text>
+      </View>
+    );
+  };
   //   渲染尾款内容
   _payRestMoney = () => {
     return (
       <View>
+        {this._totalPrice()}
         {this._expressFee()}
         {this._viewedCost()}
         {this._advance()}

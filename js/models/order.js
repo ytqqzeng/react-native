@@ -22,7 +22,7 @@ export default class Order {
    * 订单状态改为 支付成功
    * @param {} params
    */
-  static orderStatusSuccess(params = { goods_id, member_id }) {
+  static orderStatusSuccess(params = { order_id, member_id }) {
     return Fetch.fetchGet(OrderApi.orderStatusSuccess, params).catch(error => {
       console.warn("error::修改订单状态报错", error);
       return false;
@@ -32,7 +32,7 @@ export default class Order {
    * 正常购买支付
    * @param {} params
    */
-  static changeOrderToSuccess(params = { goods_id, member_id }) {
+  static changeOrderToSuccess(params = { order_id, member_id }) {
     return Fetch.fetchGet(OrderApi.changeOrderToSuccess, params).catch(
       error => {
         console.warn("error::修改订单状态报错", error);
@@ -44,7 +44,9 @@ export default class Order {
    * 支付定金
    * @param {} params
    */
-  static prePaySuccess(params = { goods_id, member_id }) {
+  static prePaySuccess(params = { order_id, member_id }) {
+    // console.warn("params::", params);
+    // console.warn("order_id2222::", order_id);
     return Fetch.fetchGet(OrderApi.prePaySuccess, params).catch(error => {
       console.warn("error::修改订单状态报错", error);
       return false;
@@ -68,7 +70,6 @@ export default class Order {
     remark // 备注
   }) {
     let formdata = new FormData();
-
     formdata.append("goods_id", goods_id);
     formdata.append("member_id", member_id);
     if (product_id) {
@@ -90,7 +91,7 @@ export default class Order {
       body: formdata
     })
       .then(function(response) {
-        console.warn("response::", response);
+        // console.warn("response::", response);
         return response.json();
       })
       .catch(e => {
