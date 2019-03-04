@@ -16,11 +16,14 @@ import {
   View,
   FlatList
 } from "react-native";
+import { scaleSize, scaleHeight, setSpText2 } from "../../../util/screenUtil";
 
 export default class CouponType extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+       
+    };
   }
   _renderItem = ({ item }) => {
     const isUsed = this.props.used;
@@ -49,11 +52,11 @@ export default class CouponType extends Component {
         }}
       >
         <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Image source={img} style={{ height: 140, width: 200 }} />
+          <Image source={img} style={{ height: scaleSize(140), width: scaleSize(150) }} />
           <Text
             style={{
               position: "absolute",
-              fontSize: 50,
+              fontSize: setSpText2 (20),
               fontWeight: "bold",
               color: "#FFF",
               top: 20
@@ -64,7 +67,7 @@ export default class CouponType extends Component {
 
           <Text
             style={{
-              fontSize: 20,
+              fontSize: setSpText2 (10),
               color: "#FFF",
               position: "absolute",
               top: 80
@@ -82,11 +85,11 @@ export default class CouponType extends Component {
             justifyContent: "flex-start"
           }}
         >
-          <Text style={{ fontSize: 20, color: "#666", marginBottom: 40 }}>
+          <Text style={{ fontSize: setSpText2 (13), color: "#666", marginBottom: 40 }}>
             {type_name}
           </Text>
           <Text
-            style={{ fontSize: 15, color: "#DDD" }}
+            style={{ fontSize: setSpText2 (10), color: "#DDD" }}
           >{`${start} - ${end}`}</Text>
           {isUsed ? (
             <Image
@@ -105,10 +108,12 @@ export default class CouponType extends Component {
     );
   };
   render() {
-    const { data, used } = this.props;
     return (
       <View style={styles.container}>
-        <FlatList data={data} renderItem={this._renderItem} />
+        <FlatList data={this.props.data} 
+        onRefresh={this.props.changeData}
+        refreshing={this.props.loading}
+        renderItem={this._renderItem} />
       </View>
     );
   }
@@ -119,16 +124,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5FCFF"
   },
-  page1: {
-    flex: 1,
-    backgroundColor: "red"
-  },
-  page2: {
-    flex: 1,
-    backgroundColor: "green"
-  },
-  image: {
-    height: 22,
-    width: 22
-  }
+  
 });

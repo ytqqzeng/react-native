@@ -20,8 +20,6 @@ import {
 import NavigationBar from "../../common/NavigationBar";
 import { scaleSize, scaleHeight, setSpText2 } from "../../util/screenUtil";
 import Swipper from "./Swipper";
-import Video from "react-native-video";
-import videoUrl from "../../../res/pageImage/landing.mp4";
 
 export default class Kanke extends Component {
   constructor(props) {

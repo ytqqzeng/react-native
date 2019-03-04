@@ -14,7 +14,6 @@ import HomeIndex from "../page/Home";
 import MyPage from "../page/My";
 import GoodGoods from "../page/GoodGoods";
 import Category from "../page/Category";
-import Kanke from "../page/Kanke";
 
 export default class HomePage extends Component {
   constructor(props) {
@@ -43,14 +42,14 @@ export default class HomePage extends Component {
             renderIcon={() => (
               <Image
                 style={styles.image}
-                source={require("../../res/image/home.png")}
+                source={require("../../res/image/tab/icon_tab_main_select.png")}
               />
             )}
             // 设置选中的颜色 注意这里的写法
             renderSelectedIcon={() => (
               <Image
                 style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/home.png")}
+                source={require("../../res/image/tab/icon_tab_main_selected.png")}
               />
             )}
             // badgeText="2" // 设置有几个消息
@@ -67,41 +66,20 @@ export default class HomePage extends Component {
             renderIcon={() => (
               <Image
                 style={styles.image}
-                source={require("../../res/image/classify.png")}
+                source={require("../../res/image/tab/icon_tab_cat_center_select.png")}
               />
             )}
             renderSelectedIcon={() => (
               <Image
                 style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/classify.png")}
+                source={require("../../res/image/tab/icon_tab_cat_center_selected.png")}
               />
             )}
             onPress={() => this.setState({ selectedTab: "tb_classify" })}
           >
             <Category navigation={navigation} />
           </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === "tb_kanke"}
-            title={"看客"}
-            titleStyle={{ fontSize: setSpText2(10) }}
-            // 导航文字选中的颜色
-            selectedTitleStyle={{ color: "#FF3C50" }}
-            renderIcon={() => (
-              <Image
-                style={[styles.image]}
-                source={require("../../res/image/look2.png")}
-              />
-            )}
-            renderSelectedIcon={() => (
-              <Image
-                style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/look2.png")}
-              />
-            )}
-            onPress={() => this.setState({ selectedTab: "tb_kanke" })}
-          >
-            <Kanke navigation={navigation} />
-          </TabNavigator.Item>
+
           <TabNavigator.Item
             selected={this.state.selectedTab === "tb_goodgoods"}
             title={"好物"}
@@ -111,13 +89,13 @@ export default class HomePage extends Component {
             renderIcon={() => (
               <Image
                 style={styles.image}
-                source={require("../../res/image/goodgoods.png")}
+                source={require("../../res/image/tab/icon_tab_goodgoods_select.png")}
               />
             )}
             renderSelectedIcon={() => (
               <Image
                 style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/goodgoods.png")}
+                source={require("../../res/image/tab/icon_tab_goodgoods_selected.png")}
               />
             )}
             onPress={() => this.setState({ selectedTab: "tb_goodgoods" })}
@@ -133,13 +111,13 @@ export default class HomePage extends Component {
             renderIcon={() => (
               <Image
                 style={styles.image}
-                source={require("../../res/image/mine.png")}
+                source={require("../../res/image/tab/icon_tab_user_select.png")}
               />
             )}
             renderSelectedIcon={() => (
               <Image
                 style={[styles.image, { tintColor: "#FF3C50" }]}
-                source={require("../../res/image/mine.png")}
+                source={require("../../res/image/tab/icon_tab_user_selected.png")}
               />
             )}
             onPress={() => this.setState({ selectedTab: "tb_mine" })}
@@ -160,6 +138,6 @@ const styles = StyleSheet.create({
     height: scaleHeight(20),
     width: scaleSize(20),
     tintColor: "#222222",
-    marginBottom: scaleSize(2.5)
+    marginBottom: scaleSize(1.5)
   }
 });

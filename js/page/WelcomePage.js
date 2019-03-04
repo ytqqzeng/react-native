@@ -12,8 +12,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import ButtonView from "../common/ButtonView";
-import videoUrl from "../../res/pageImage/landing.mp4";
-import Video from "react-native-video";
+
 import { connect } from "react-redux";
 import { NavigationActions } from "react-navigation";
 import * as WeChat from "react-native-wechat";

@@ -47,9 +47,24 @@ class CheckPriceGoods extends Component {
   _updateData = () => {
     const { uname } = this.props.userInfo;
     Goods.checkedPriceGoodsList({ uname }).then(res => {
-      if (res.result == 1) {
+      if (res.result === 1) {
         this.setState({
           dataArray: res.data,
+          loading: false
+        });
+      }
+    });
+  };
+  _getData = () => {
+    this.setState({
+      loading: true
+    });
+    const { uname } = this.props.userInfo;
+    Goods.checkedPriceGoodsList({ uname }).then(res => {
+      if (res.result == 1) {
+        const newData = this.state.dataArray.concat(res.data);
+        this.setState({
+          dataArray: newData,
           loading: false
         });
       }
@@ -78,6 +93,8 @@ class CheckPriceGoods extends Component {
             <FlatList
               data={this.state.dataArray}
               renderItem={this._renderItemView}
+              refreshing={this.state.loading}
+              onRefresh={this._getData}
             />
           )}
         </View>

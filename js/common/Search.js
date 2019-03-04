@@ -284,6 +284,7 @@ class SearchPage extends Component {
           style={{
             position: "absolute",
             top: textTop,
+
             left: textLeft,
             width: "100%"
           }}
@@ -300,7 +301,6 @@ class SearchPage extends Component {
             }}
             onFocus={this._onfucus}
             onSubmitEditing={this._getData}
-            underlineColorAndroid={"transparent"}
             placeholderTextColor={"#CCCCCC"}
           />
         </Animated.View>
@@ -357,16 +357,12 @@ const styles = StyleSheet.create({
   textInput: {
     width: "85%",
     fontSize: setSpText2(30),
-    color: "#CCC",
-    borderBottomColor: "#CCC",
-    borderBottomWidth: 1
+    color: "#CCC"
   },
   textInput2: {
     width: "76%",
     fontSize: 20,
-    color: "#CCC",
-    borderBottomColor: "#CCC",
-    borderBottomWidth: 1
+    color: "#CCC"
   },
   hotSearch: {
     position: "absolute",

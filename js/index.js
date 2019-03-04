@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     View,
     BackHandler,
-    Alert,
+    Alert,SafeAreaView
 } from "react-native";
 import AppNavigator from './navigators/AppNavigator'
 import { Provider } from "react-redux";
@@ -24,7 +24,9 @@ export default class Index extends Component {
     render() {
         return <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
+            <SafeAreaView style={{flex: 1, backgroundColor: '#333'}}>
                 <AppNavigator />
+                </SafeAreaView>
             </PersistGate>
         </Provider>;
     }

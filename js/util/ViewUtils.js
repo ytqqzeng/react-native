@@ -49,7 +49,7 @@ export default class ViewUtils {
             source={
               expandableIco
                 ? expandableIco
-                : require("../../res/images/ic_tiaozhuan.png")
+                : require("../../res/image/ic_tiaozhuan.png")
             }
             style={[
               {
@@ -129,11 +129,12 @@ export default class ViewUtils {
             height: scaleSize(19),
             marginRight: scaleSize(20),
             marginBottom: scaleSize(0),
+            marginTop: scaleSize(1),
             tintColor: "#000"
           }}
           source={require("../../res/image/search.png")}
         />
-        <Text style={{ fontSize: setSpText2(10), marginRight: scaleSize(20) }}>
+        <Text style={{ fontSize: setSpText2(9), marginRight: scaleSize(20) }}>
           搜索
         </Text>
       </TouchableOpacity>
@@ -156,7 +157,7 @@ export default class ViewUtils {
         <View style={{ paddingRight: 8 }}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../../res/images/ic_more_vert_white_48pt.png")}
+            source={require("../../res/image/ic_more_vert_white_48pt.png")}
           />
         </View>
       </TouchableHighlight>
@@ -179,7 +180,7 @@ export default class ViewUtils {
             marginRight: 10,
             tintColor: "white"
           }}
-          source={require("../../res/images/ic_share.png")}
+          source={require("../../res/image/ic_share.png")}
         />
       </TouchableHighlight>
     );

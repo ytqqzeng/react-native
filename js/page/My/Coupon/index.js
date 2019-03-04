@@ -9,7 +9,7 @@
 import React, { Component } from "react";
 import {
   Platform,
-  TouchableOpacity,
+  ActivityIndicator,
   StyleSheet,
   ScrollView,
   Image,
@@ -22,19 +22,21 @@ import { scaleSize, setSpText2 } from "../../../util/screenUtil";
 import NavigationBar from "../../../common/NavigationBar";
 import ViewUtils from "../../../util/ViewUtils";
 import CouponType from "./CouponType";
-// import StorageUtil, { StorageKey } from "../../../models/StorageModel";
+
 import User from "../../../models/user";
 import ScrollableTabView, {
   ScrollableTabBar
 } from "react-native-scrollable-tab-view";
 import { connect } from "react-redux";
-// import { asyncUserOrderList } from "../../../actions/order";
+
 class Coupon extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      dataArray: [],
       usedData: [],
-      noUseData: []
+      noUseData: [],
+      loading: true
     };
   }
 
@@ -50,18 +52,29 @@ class Coupon extends Component {
       noUseData
     });
   };
-  componentDidMount() {
+  _getData = () => {
+    this.setState({
+      loading: true
+    });
     const { member_id } = this.props.userInfo;
     User.getUserCoupon({ member_id }).then(res => {
       if (res.result === 1) {
-        this._filterData(res.data);
+        var tmpData = this.state.dataArray.concat(res.data);
+        this._filterData(tmpData);
+        this.setState({
+          loading: false,
+          dataArray: tmpData
+        });
       }
     });
+  };
+  componentDidMount() {
+    this._getData();
   }
   render() {
     const { navigation } = this.props;
-    const { usedData, noUseData } = this.state;
-    console.warn("noUseData::", noUseData);
+    const { usedData, noUseData, loading } = this.state;
+
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -71,40 +84,48 @@ class Coupon extends Component {
             navigation.goBack(null);
           })}
         />
-        <ScrollableTabView
-          tabBarBackgroundColor="#fff" // 背景色
-          tabBarInactiveTextColor="#666" // 未激活状态的颜色
-          tabBarActiveTextColor="#FC6969" // 激活状态颜色
-          tabBarUnderlineStyle={{
-            backgroundColor: "#FF3C50",
-            height: scaleSize(0)
-          }}
-          // 这个是插件里面自定义的一个头组件
-          renderTabBar={() => (
-            <ScrollableTabBar
-              tabsContainerStyle={{ color: "red" }}
-              textStyle={{
-                fontSize: setSpText2(12),
-                borderBottomColor: "#fff"
-              }}
+        {loading ? (
+          <ActivityIndicator size="large" color="#FC6969" />
+        ) : (
+          <ScrollableTabView
+            tabBarBackgroundColor="#fff" // 背景色
+            tabBarInactiveTextColor="#666" // 未激活状态的颜色
+            tabBarActiveTextColor="#FC6969" // 激活状态颜色
+            tabBarUnderlineStyle={{
+              backgroundColor: "#FF3C50",
+              height: scaleSize(0)
+            }}
+            // 这个是插件里面自定义的一个头组件
+            renderTabBar={() => (
+              <ScrollableTabBar
+                tabsContainerStyle={{ color: "red" }}
+                textStyle={{
+                  fontSize: setSpText2(12),
+                  borderBottomColor: "#fff"
+                }}
 
-              // style ={styles.scrollBox}
+                // style ={styles.scrollBox}
+              />
+            )} // 自定义tabbar 可以不要这个
+          >
+            <CouponType
+              tabLabel={`未使用(${noUseData.length})`}
+              navigation={navigation}
+              data={noUseData}
+              used={false}
+              changeData={this._getData}
+              loading={this.state.loading}
             />
-          )} // 自定义tabbar 可以不要这个
-        >
-          <CouponType
-            tabLabel={`未使用(${noUseData.length})`}
-            navigation={navigation}
-            data={noUseData}
-            used={false}
-          />
-          <CouponType
-            tabLabel="使用记录"
-            navigation={navigation}
-            data={usedData}
-            used={true}
-          />
-        </ScrollableTabView>
+            <CouponType
+              tabLabel="使用记录"
+              navigation={navigation}
+              data={usedData}
+              changeData={this._getData}
+              used={true}
+              loading={this.state.loading}
+            />
+          </ScrollableTabView>
+        )}
       </View>
     );
   }

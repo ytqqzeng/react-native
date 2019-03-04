@@ -7,16 +7,7 @@
  */
 
 import React, { Component } from "react";
-import {
-  Platform,
-  StyleSheet,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Text,
-  FlatList,
-  View
-} from "react-native";
+import { StyleSheet, Image, Text, View } from "react-native";
 import { scaleSize, setSpText2 } from "../../util/screenUtil";
 import NavigationBar from "../../common/NavigationBar";
 import ViewUtils from "../../util/ViewUtils";
@@ -27,12 +18,9 @@ class OrderPayed extends Component {
     super(props);
     this.state = {};
   }
-  //   componentDidMount(){
-  //     const { navigation, userInfo } = this.props;
-  //     const { flag, price } = navigation.state.params;
-  //   }
+
   _renderHead = () => {
-    const { navigation, userInfo } = this.props;
+    const { navigation } = this.props;
     const { flag, price } = navigation.state.params;
     const payedType = flag === "weixin" ? "微信支付" : "支付宝支付";
     return (
@@ -60,20 +48,20 @@ class OrderPayed extends Component {
           />
           <View>
             <View style={{ flexDirection: "row", paddingVertical: 7 }}>
-              <Text style={{ fontSize: 21 }}>支付方式：</Text>
-              <Text style={{ fontSize: 21, color: "#FC6969" }}>
+              <Text style={{ fontSize: 19 }}>支付方式：</Text>
+              <Text style={{ fontSize: 19, color: "#FC6969" }}>
                 {payedType}
               </Text>
             </View>
             <View style={{ flexDirection: "row", paddingVertical: 7 }}>
-              <Text style={{ fontSize: 21 }}>支付金额：</Text>
-              <Text style={{ fontSize: 21, color: "#FC6969" }}>
+              <Text style={{ fontSize: 19 }}>支付金额：</Text>
+              <Text style={{ fontSize: 19, color: "#FC6969" }}>
                 {`¥ ${price}`}
               </Text>
             </View>
             <View style={{ flexDirection: "row", paddingVertical: 7 }}>
-              <Text style={{ fontSize: 21 }}>优惠金额：</Text>
-              <Text style={{ fontSize: 21, color: "#FC6969" }}>{`¥ 0.00`}</Text>
+              <Text style={{ fontSize: 19 }}>优惠金额：</Text>
+              <Text style={{ fontSize: 19, color: "#FC6969" }}>{`¥ 0.00`}</Text>
             </View>
           </View>
         </View>
@@ -118,7 +106,7 @@ class OrderPayed extends Component {
           style={{
             paddingVertical: 15,
             paddingHorizontal: 20,
-            fontSize: 20,
+            fontSize: 18,
             color: "#999"
           }}
         >
@@ -136,7 +124,6 @@ class OrderPayed extends Component {
   }
   render() {
     const { navigation, userInfo } = this.state;
-    console.warn("userInfo5555::", userInfo);
     return (
       <View style={styles.container}>
         <NavigationBar

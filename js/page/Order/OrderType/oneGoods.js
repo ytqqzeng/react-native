@@ -7,28 +7,12 @@
  */
 
 import React, { Component } from "react";
-import {
-  Platform,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Text,
-  FlatList,
-  TextInput,
-  View,
-  Alert
-} from "react-native";
+import { StyleSheet, Image, Text, TextInput, View, Alert } from "react-native";
 import dayjs from "dayjs";
-
 import { scaleSize, setSpText2 } from "../../../util/screenUtil";
 import CountDown from "./CountDown";
 import Order from "../../../models/order";
 import User from "../../../models/user";
-import ScrollableTabView, {
-  ScrollableTabBar
-} from "react-native-scrollable-tab-view";
-import { connect } from "react-redux";
 import { asyncUserOrderList } from "../../../actions/order";
 import FnUtils from "../../../util/fnUtils";
 const orderArray = [

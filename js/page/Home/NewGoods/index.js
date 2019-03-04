@@ -61,20 +61,8 @@ class NewGood extends Component {
         this.setState({
           swipperArray: res.data
         });
-
-        // StorageUtil.SetStorage(StorageKey.swipperGoods, res.data);
       }
     });
-
-    // Goods.goodSearch({ keyword: "女", member_id }).then(res => {
-    //   if (res.result == 1) {
-    //     this.setState({
-    //       swipperArray: res.data
-    //     });
-
-    //     StorageUtil.SetStorage(StorageKey.swipperGoods, res.data);
-    //   }
-    // });
     // 新品的数据
     Goods.getLatestGoods({ member_id }).then(res => {
       if (res.result == 1) {
@@ -138,12 +126,7 @@ class NewGood extends Component {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.swipperWapper}>
-            <Swipper
-              data={this.state.swipperArray}
-              isShowText={false}
-              {...this.props}
-              //   updateData={this._updateData}
-            />
+            <Swipper data={this.state.swipperArray} {...this.props} />
           </View>
           <View
             style={{

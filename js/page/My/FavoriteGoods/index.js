@@ -26,7 +26,7 @@ class FavoriteGoods extends Component {
   }
   _renderItemView = ({ item, index }) => {
     const { navigation } = this.props;
-    // console.warn("navigaiton::", navigation);
+
     return (
       <GoodsCell
         item={item}
@@ -43,6 +43,21 @@ class FavoriteGoods extends Component {
       if (res.result == 1) {
         this.setState({
           dataArray: res.data,
+          loading: false
+        });
+      }
+    });
+  };
+  _getData = () => {
+    this.setState({
+      loading: true
+    });
+    const { uname } = this.props.userInfo;
+    Goods.favoriteGoodsList({ uname }).then(res => {
+      if (res.result == 1) {
+        const newData = this.state.dataArray.concat(res.data);
+        this.setState({
+          dataArray: newData,
           loading: false
         });
       }
@@ -69,6 +84,8 @@ class FavoriteGoods extends Component {
             <ActivityIndicator size="large" color="#FC6969" />
           ) : (
             <FlatList
+              refreshing={this.state.loading}
+              onRefresh={this._getData}
               data={this.state.dataArray}
               renderItem={this._renderItemView}
             />

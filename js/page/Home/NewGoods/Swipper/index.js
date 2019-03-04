@@ -25,55 +25,39 @@ export default class Swipper extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.slide1 = this.props.slide;
   }
   rederImage(data, key) {
-    // isShowText 是否显示文字
-    const { navigation, isShowText, updateData } = this.props;
     let Imageurl = FnUtils.getOriginalImg(data.banner, "subject");
-
-    FnUtils.getOriginalImg;
     return (
       <TouchableOpacity
         key={key}
         onPress={() => {
-          navigation.navigate("SwiperDetail", {
+          this.props.navigation.navigate("SwiperDetail", {
             subject_id: data.id,
             title: data.title
           });
         }}
       >
-        <View style={styles.slide375} key={key}>
-          {isShowText ? (
-            <Text style={styles.text}>
-              {data.name.substring(0, 20) + "...."}
-            </Text>
-          ) : null}
-
+        <View style={styles.slide250} key={key}>
           <Image
             style={styles.img}
             source={{ uri: Imageurl }}
-            resizeMode={"contain"}
+            resizeMode={"stretch"}
           />
         </View>
       </TouchableOpacity>
     );
   }
   render() {
-    const { data } = this.props;
     return (
       <View
         style={styles.container}
         style={{
-          height: 375
+          height: 250
         }}
       >
-        <Swiper
-          style={styles.wrapper}
-          style={{ height: 375 }}
-          showsButtons={false}
-        >
-          {data.map((item, i) => {
+        <Swiper style={styles.wrapper} showsButtons={false}>
+          {this.props.data.map((item, i) => {
             return this.rederImage(item, i);
           })}
         </Swiper>
@@ -88,11 +72,11 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: "row",
-    height: 375
+    height: 250
   },
-  slide375: {
+  slide250: {
     flexDirection: "row",
-    height: 375,
+    height: 250,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#333"
@@ -112,6 +96,7 @@ const styles = StyleSheet.create({
   },
   img: {
     flex: 1,
-    height: 450
+    height: 250,
+    width: WindowWidth
   }
 });
